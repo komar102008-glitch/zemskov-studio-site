@@ -31,8 +31,8 @@
  function cancelStoryTransition(){clearTimeout(swapTimer);storyAnimation?.cancel();storyAnimation=null;story.style.opacity='';}
  function renderIntro(open){
    cancelStoryTransition();index.hidden=true;link.hidden=true;link.removeAttribute('href');
-   heading.innerHTML=open?'С чего<br><em>начнём?</em>':'Давайте<br><em>познакомимся.</em>';
-   copy.textContent=open?'Нажмите на номер лепестка или выберите тему ниже.':'Раскройте цветок и выберите тему.';
+   heading.innerHTML=open?'Я Никита.':'Давайте познакомимся.';
+   copy.textContent=open?'Выберите лепесток — расскажу немного о себе.':'Раскройте цветок и выберите тему.';
    copy.classList.remove('is-pending');
  }
  function setExpanded(open){

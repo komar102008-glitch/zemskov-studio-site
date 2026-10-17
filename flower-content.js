@@ -1,9 +1,9 @@
-// Only confirmed personal information belongs here. Empty entries stay visibly unfinished in the local draft.
+// Personal facts confirmed by Nikita; no invented projects or contact details.
 window.zemskovFlowerContent={
-  who:{title:'Обо мне',text:''},
-  practice:{title:'Чем занимаюсь',text:''},
-  approach:{title:'Как работаю',text:''},
-  inspiration:{title:'Вдохновение',text:''},
-  future:{title:'Идеи',text:''},
-  contact:{title:'Контакт',text:'',href:'',linkText:''}
+ who:{title:'Я Никита',text:'Я создаю сайты. Zemskov studio — имя, которое я выбрал для своего портфолио.'},
+ practice:{title:'Создаю сайты',text:'Мне интересно соединять творчество с конкретной задачей: помогать людям рассказывать о своём продукте.'},
+ approach:{title:'Какой сайт мне нравится',text:'Живой и понятный. Без лишних эффектов и общих фраз. Хочу, чтобы за оформлением был виден человек и то, что он делает.'},
+ inspiration:{title:'Меня вдохновляет творчество',text:'И возможность помочь другому человеку продвинуть свой продукт. Мне хочется, чтобы у моей работы была такая польза.'},
+ future:{title:'Что хочу создавать',text:'Сайты для людей, которым нужно показать свой продукт. Это направление, в котором я хочу работать.'},
+ contact:{title:'Почему здесь цветок',text:'Мне понравилась идея знакомства через раскрывающийся бутон. Поэтому вместо обычного списка я выбрал цветок: каждый лепесток открывает часть рассказа обо мне.'}
 };
