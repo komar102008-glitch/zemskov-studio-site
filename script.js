@@ -7,10 +7,11 @@ const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
 const caseDialog=document.querySelector('#case-dialog');
 const briefDialog=document.querySelector('#brief-dialog');
 const ease='cubic-bezier(.22,1,.36,1)';
+const touchScreen=window.matchMedia('(max-width:700px), (pointer:coarse)');
 const closingDialogs=new WeakSet();
 function openDialog(dialog){
   dialog.showModal();document.body.style.overflow='hidden';
-  if(!reducedMotion.matches)dialog.animate([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:480,easing:ease});
+  if(!reducedMotion.matches)dialog.animate([{opacity:0,transform:'translate3d(0,10px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:touchScreen.matches?280:480,easing:ease});
 }
 async function closeDialog(dialog){
   if(closingDialogs.has(dialog)||!dialog.open)return;
@@ -47,7 +48,7 @@ document.querySelectorAll('details').forEach(details=>{
     const willOpen=!details.open;
     if(willOpen)details.open=true;
     const end=willOpen?details.getBoundingClientRect().height:summary.getBoundingClientRect().height;
-    animation=details.animate({height:[`${start}px`,`${end}px`]},{duration:480,easing:ease});
+    animation=details.animate({height:[`${start}px`,`${end}px`]},{duration:touchScreen.matches?300:480,easing:ease});
     animation.onfinish=()=>{details.open=willOpen;animation=null};
   });
 });
