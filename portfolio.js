@@ -16,3 +16,10 @@
  }catch(error){report('Не удалось подтвердить отправку. Ваш текст остался в форме. Скопируйте заявку и отправьте на '+config.email+'.',true)}finally{clearTimeout(timeout);sending=false;submit.disabled=false;submit.textContent=initialLabel}
  });
 })();
+(()=>{
+ const motion=matchMedia('(prefers-reduced-motion:reduce)'),bubbles=[...document.querySelectorAll('.service-list article')];
+ if(motion.matches||!('IntersectionObserver' in window))return;
+ const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;const node=entry.target;node.classList.remove('bubble-waiting');node.classList.add('bubble-visible');node.dataset.revealed='true';observer.unobserve(node)})},{threshold:.12});
+ bubbles.forEach((node,index)=>{node.style.animationDelay=matchMedia('(max-width:700px)').matches?'0ms':`${index*100}ms`;node.classList.add('bubble-waiting');observer.observe(node)});
+ motion.addEventListener('change',()=>{if(!motion.matches)return;observer.disconnect();bubbles.forEach(node=>node.classList.remove('bubble-waiting','bubble-visible'))});
+})();
