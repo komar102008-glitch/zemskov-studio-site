@@ -41,10 +41,10 @@ vec3 petalPoint(float u,float t){
 }
 `;
 
-function makeGeometry(shape,i){
- const nx=30,ny=56,positions=[],params=[],uvs=[],indices=[];
+function makeGeometry(shape,i,lite=false){
+ const nx=lite?18:30,ny=lite?40:56,positions=[],params=[],uvs=[],indices=[];
  for(let y=0;y<=ny;y++)for(let x=0;x<=nx;x++){
-  const u=x/nx*2-1,t=y/ny,profile=Math.pow(Math.max(.0001,Math.sin(Math.PI*t)),.83),row=petalProfile[y],w=shape.width*row.width*(1+.07*Math.sin(t*8+shape.phase)+.035*u),lateral=u*w+.055*Math.sin(t*Math.PI)*Math.sin(shape.phase)+row.shift*shape.width*.42;
+  const u=x/nx*2-1,t=y/ny,profile=Math.pow(Math.max(.0001,Math.sin(Math.PI*t)),.83),row=petalProfile[Math.round(t*(petalProfile.length-1))],w=shape.width*row.width*(1+.07*Math.sin(t*8+shape.phase)+.035*u),lateral=u*w+.055*Math.sin(t*Math.PI)*Math.sin(shape.phase)+row.shift*shape.width*.42;
   const z=.22*Math.sin(t*Math.PI)+.34*Math.pow(Math.abs(u),2.4)*profile+.10*u*profile*Math.cos(shape.phase)+.16*Math.pow(t,5)*Math.sin(shape.phase+.4)+.07*u*t*t*Math.sin(shape.phase)+.008*Math.sin(t*43+u*7+shape.phase)*profile*Math.abs(u);
   positions.push(Math.cos(shape.angle)*(.115+shape.length*t)-Math.sin(shape.angle)*lateral,Math.sin(shape.angle)*(.115+shape.length*t)+Math.cos(shape.angle)*lateral,z);
   params.push(u,t,row.width,row.shift);
@@ -64,11 +64,12 @@ function inject(material,uniforms,normal=true){
  material.customProgramCacheKey=()=>normal?'zemskov-petal-v2':'zemskov-petal-depth-v2';
 }
 
-export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
+export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onTypeSpread}){
  const small=matchMedia('(max-width:700px)').matches;
+ const lowPower=small&&Boolean(navigator.connection?.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=4));canvas.dataset.quality=small?(lowPower?'light':'mobile'):'full';
  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});
- renderer.setPixelRatio(Math.min(devicePixelRatio,small?1.15:1.6));renderer.setClearColor(0xf2f1ee,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.transmissionResolutionScale=small?.5:.75;
- renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.setPixelRatio(Math.min(devicePixelRatio,small?(lowPower?.85:1):1.6));renderer.setClearColor(0xf2f1ee,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.transmissionResolutionScale=small?(lowPower?.25:.35):.75;
+ renderer.shadowMap.enabled=!small;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(37,1,.1,40);camera.position.set(.45,.25,10.3);camera.lookAt(0,-.45,0);
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.025).texture;room.dispose();pmrem.dispose();
  await document.fonts.ready;
@@ -81,7 +82,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
   const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction};
  }
  const metric=document.createElement('canvas').getContext('2d');metric.font='800 '+fontSize+'px Manrope, Arial';
- const words=[makeWord('ZEM',small?760:-10,715,-1),makeWord('SKOV',(small?2300:3070)-metric.measureText('SKOV').width,1250,1)];
+ const words=small?[]:[makeWord('ZEM',small?760:-10,715,-1),makeWord('SKOV',(small?2300:3070)-metric.measureText('SKOV').width,1250,1)];
 
  const model=new THREE.Group();scene.add(model);const head=new THREE.Group();head.position.y=.28;model.add(head);
  scene.add(new THREE.AmbientLight(0xffffff,.8));
@@ -91,7 +92,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
  for(let i=0;i<6;i++){
   const shape=shapes[i],uniforms={uOpen:{value:0},uAngle:{value:shape.angle},uLength:{value:shape.length},uWidth:{value:shape.width},uPhase:{value:shape.phase},uTime:{value:0},uLife:{value:0}};
   const material=new THREE.MeshPhysicalMaterial({color:0xe7eae8,roughness:small?.16:.105,metalness:0,transmission:.93,thickness:.28,ior:1.47,attenuationColor:0xcbd6d1,attenuationDistance:3.5,clearcoat:1,clearcoatRoughness:.08,dispersion:small?0:.025,envMapIntensity:1.35,side:THREE.DoubleSide,emissive:0x000000,emissiveIntensity:0});inject(material,uniforms);
-  const mesh=new THREE.Mesh(makeGeometry(shape,i),material);mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=false;mesh.userData.index=i;
+  const mesh=new THREE.Mesh(makeGeometry(shape,i,small),material);mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=false;mesh.userData.index=i;
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.DoubleSide});inject(depth,uniforms,false);mesh.customDepthMaterial=depth;head.add(mesh);meshes.push(mesh);uniformSets.push(uniforms);
  }
  const stemMat=new THREE.MeshStandardMaterial({color:0x1a1c1c,roughness:.44,metalness:.55});
@@ -99,11 +100,11 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
  const stem=new THREE.Mesh(new THREE.TubeGeometry(stemCurve,42,.025,7,false),stemMat);model.add(stem);
  const leafGeo=new THREE.BufferGeometry(),lp=[],lu=[],li=[];for(let j=0;j<=26;j++)for(let k=0;k<=12;k++){const t=j/26,u=k/12*2-1,w=.29*Math.pow(Math.sin(Math.PI*t),.8);lp.push(.06+1.06*t,-1.72+.58*t+u*w,-.15+.21*Math.sin(t*Math.PI)+.12*u*u);lu.push(.61+.28*t,1-(.84+.1*t+u*w*.18))}for(let j=0;j<26;j++)for(let k=0;k<12;k++){const a=j*13+k;li.push(a,a+13,a+1,a+1,a+13,a+14)}leafGeo.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));leafGeo.setAttribute('uv',new THREE.Float32BufferAttribute(lu,2));leafGeo.setIndex(li);leafGeo.computeVertexNormals();const leaf=new THREE.Mesh(leafGeo,new THREE.MeshStandardMaterial({color:0x303434,side:THREE.DoubleSide,roughness:.95}));leaf.visible=false;model.add(leaf);
  const core=new THREE.Group();head.add(core);const gold=new THREE.MeshStandardMaterial({color:0x999d99,roughness:.3,metalness:1}),base=new THREE.Mesh(new THREE.SphereGeometry(.17,24,18),new THREE.MeshStandardMaterial({color:0xadb2af,roughness:.17,metalness:1}));base.scale.set(1,1,.8);core.add(base);
- const n=190,pollen=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.012,.025,3,6),gold,n),dummy=new THREE.Object3D(),up=new THREE.Vector3(0,1,0),fp=[],fn=[],fi=[];
+ const n=small?88:190,pollen=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.012,.025,small?2:3,small?5:6),gold,n),dummy=new THREE.Object3D(),up=new THREE.Vector3(0,1,0),fp=[],fn=[],fi=[];
  for(let i=0;i<n;i++){
   const theta=i*2.399963,r=Math.sqrt((i+.5)/n)*.27,h=.19+.26*(1-r/.37)+.025*Math.sin(i*3.1),start=new THREE.Vector3(Math.cos(theta)*r*.55,Math.sin(theta)*r*.55,.06),end=new THREE.Vector3(Math.cos(theta)*r*1.48,Math.sin(theta)*r*1.48,h);
   const control=start.clone().lerp(end,.55);control.z+=.09;control.x+=.025*Math.sin(i*.7);control.y+=.025*Math.cos(i*.9);
-  const curve=new THREE.QuadraticBezierCurve3(start,control,end),tube=new THREE.TubeGeometry(curve,7,.0045,5,false),offset=fp.length/3;
+  const curve=new THREE.QuadraticBezierCurve3(start,control,end),tube=new THREE.TubeGeometry(curve,small?5:7,.0045,small?4:5,false),offset=fp.length/3;
   fp.push(...tube.attributes.position.array);fn.push(...tube.attributes.normal.array);fi.push(...Array.from(tube.index.array,index=>index+offset));tube.dispose();
   dummy.position.copy(end);dummy.quaternion.setFromUnitVectors(up,curve.getTangent(1).normalize());dummy.scale.setScalar(.88+.16*Math.sin(i*2.1));dummy.updateMatrix();pollen.setMatrixAt(i,dummy.matrix);pollen.setColorAt(i,new THREE.Color().setHSL(.15,.015,.5+.15*Math.sin(i*1.7)));
  }const filGeo=new THREE.BufferGeometry();filGeo.setAttribute('position',new THREE.Float32BufferAttribute(fp,3));filGeo.setAttribute('normal',new THREE.Float32BufferAttribute(fn,3));filGeo.setIndex(fi);const filaments=new THREE.Mesh(filGeo,new THREE.MeshStandardMaterial({color:0x686c69,roughness:.38,metalness:1}));core.add(filaments,pollen);core.position.z=.035;
@@ -112,27 +113,29 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
  const botanical=new THREE.Group();botanical.position.y=-2.48;model.add(botanical);
  for(const part of [head,stem,leaf]){model.remove(part);part.position.y+=2.48;botanical.add(part)}
  for(const direction of [-1,1]){const cableCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(direction*.15,-2.48,0),new THREE.Vector3(direction*.42,-1.95,.1),new THREE.Vector3(direction*.72,-1.35,.02),new THREE.Vector3(direction*.55,-.8,.02),new THREE.Vector3(0,.28,0)]);const cable=new THREE.Mesh(new THREE.TubeGeometry(cableCurve,48,.017,7),dark);cable.position.y=2.48;botanical.add(cable)}
- const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.ShadowMaterial({color:0x727875,opacity:.13}));ground.rotation.x=-Math.PI/2;ground.position.y=-3.57;ground.receiveShadow=true;scene.add(ground);
- const gridPoints=[];for(let n=-12;n<=12;n++){for(let k=-24;k<24;k++){const x=n*.5,z=k*.25;gridPoints.push(x,-3.555,z,x,-3.555,z+.25,z,-3.555,x,z+.25,-3.555,x)}}const gridGeometry=new THREE.BufferGeometry();gridGeometry.setAttribute('position',new THREE.Float32BufferAttribute(gridPoints,3));scene.add(new THREE.LineSegments(gridGeometry,new THREE.LineBasicMaterial({color:0xc5c9c6,transparent:true,opacity:.22})));
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.ShadowMaterial({color:0x727875,opacity:.13}));ground.rotation.x=-Math.PI/2;ground.position.y=-3.57;ground.receiveShadow=true;if(!small)scene.add(ground);else{const contact=new THREE.Mesh(new THREE.CircleGeometry(1,32),new THREE.MeshBasicMaterial({color:0x59635b,transparent:true,opacity:.10,depthWrite:false}));contact.rotation.x=-Math.PI/2;contact.position.set(.12,-3.56,.08);contact.scale.set(1.05,.6,1);scene.add(contact)}
+ if(!small){const gridPoints=[];for(let n=-12;n<=12;n++){for(let k=-24;k<24;k++){const x=n*.5,z=k*.25;gridPoints.push(x,-3.555,z,x,-3.555,z+.25,z,-3.555,x,z+.25,-3.555,x)}}const gridGeometry=new THREE.BufferGeometry();gridGeometry.setAttribute('position',new THREE.Float32BufferAttribute(gridPoints,3));scene.add(new THREE.LineSegments(gridGeometry,new THREE.LineBasicMaterial({color:0xc5c9c6,transparent:true,opacity:.22})));}
  const motion=matchMedia('(prefers-reduced-motion:reduce)');let request=0,started=0,running=false,done=false,progress=0,selected=-1,hovered=-1,dragging=false,lastX=0,lastY=0,moved=0,yaw=.18,pitch=0,targetYaw=.18,targetPitch=0;
  const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
- let animated=true,visible=true,life=0,lifeTime=0,lastFrame=0;
- function labels(){head.updateMatrixWorld(true);const points=shapes.map(shape=>{const v=new THREE.Vector3(Math.cos(shape.angle)*shape.length*.69,Math.sin(shape.angle)*shape.length*.69,.16);head.localToWorld(v);v.project(camera);return{x:(v.x+1)*50,y:(1-v.y)*50}});onLabels?.(points)}
- function size(){const width=canvas.parentElement.clientWidth,height=canvas.parentElement.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;camera.updateProjectionMatrix();invalidate()}
- function frame(now){request=0;if(document.hidden||!visible){lastFrame=0;return}if(small&&now-lastFrame<30){request=requestAnimationFrame(frame);return}const dt=Math.min((now-(lastFrame||now))/1000,.05);lastFrame=now;
+ let animated=true,visible=true,life=0,lifeTime=0,lastFrame=0,lastSpread=-1,slowFrames=0,qualityReduced=lowPower;
+ function labels(){if(small)return;head.updateMatrixWorld(true);const points=shapes.map(shape=>{const v=new THREE.Vector3(Math.cos(shape.angle)*shape.length*.69,Math.sin(shape.angle)*shape.length*.69,.16);head.localToWorld(v);v.project(camera);return{x:(v.x+1)*50,y:(1-v.y)*50}});onLabels?.(points)}
+ function size(){const width=canvas.parentElement.clientWidth,height=canvas.parentElement.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;if(small){camera.position.set(.2,.25,10.8/Math.min(1,camera.aspect));camera.lookAt(0,-.4,0)}camera.updateProjectionMatrix();invalidate()}
+ function frame(now){request=0;if(document.hidden||!visible){lastFrame=0,lastSpread=-1;return}if(small&&now-lastFrame<30){request=requestAnimationFrame(frame);return}const dt=Math.min((now-(lastFrame||now))/1000,.05);lastFrame=now;
   const targetLife=animated&&!motion.matches&&progress>=1?((selected>=0||dragging) ? .12 : 1):0;
   life+=(targetLife-life)*(1-Math.exp(-dt*3));lifeTime+=dt;
   botanical.rotation.z=life*(.025*Math.sin(lifeTime*.48)+.009*Math.sin(lifeTime*.91));botanical.rotation.x=life*.014*Math.sin(lifeTime*.57+.7);
   for(const uniforms of uniformSets){uniforms.uTime.value=lifeTime;uniforms.uLife.value=life}
   canvas.dataset.motion=targetLife?'living':life>.001?'settling':'paused';
   if(running){progress=clamp((now-started)/5400);if(progress>=1){running=false;done=true}}
-  const spread=1-Math.pow(1-clamp((progress-.08)/.82),3);for(const word of words)word.mesh.position.x=word.homeX-word.direction*(small?.65:1.65)*(1-spread);canvas.dataset.typeSpread=spread.toFixed(3);
+  const spread=1-Math.pow(1-clamp((progress-.08)/.82),3);for(const word of words)word.mesh.position.x=word.homeX-word.direction*(small?.65:1.65)*(1-spread);canvas.dataset.typeSpread=spread.toFixed(3);if(spread!==lastSpread){onTypeSpread?.(spread);lastSpread=spread}
   const ease=smooth(progress);for(let i=0;i<6;i++)uniformSets[i].uOpen.value=smooth(clamp((progress-.035*i)/(.825)));
   head.rotation.x=THREE.MathUtils.lerp(-1.24,-.32,ease);head.rotation.y=.17*Math.sin(progress*Math.PI);core.scale.setScalar(.23+.77*smooth((progress-.28)/.65));
   yaw=THREE.MathUtils.lerp(yaw,targetYaw,.13);pitch=THREE.MathUtils.lerp(pitch,targetPitch,.13);model.rotation.y=yaw;model.rotation.x=pitch;
   const light=.18+.82*smooth(progress/.22);key.intensity=3.5*light;rim.intensity=2.8*light;
   let lightChanging=false;for(let i=0;i<6;i++){const target=(i===hovered||i===selected)? .025:0,material=meshes[i].material;material.emissiveIntensity=THREE.MathUtils.lerp(material.emissiveIntensity,target,.17);if(Math.abs(material.emissiveIntensity-target)>.0004)lightChanging=true}
-  renderer.render(scene,camera);labels();canvas.dataset.progress=progress.toFixed(3);canvas.dataset.renderer='webgl';
+  const renderStart=performance.now();renderer.render(scene,camera);
+  if(small&&!qualityReduced&&progress>=1){slowFrames=performance.now()-renderStart>25?slowFrames+1:Math.max(0,slowFrames-1);if(slowFrames>=12){qualityReduced=true;renderer.setPixelRatio(Math.min(devicePixelRatio,.85));renderer.transmissionResolutionScale=.25;canvas.dataset.quality='light'}}
+  labels();canvas.dataset.progress=progress.toFixed(3);canvas.dataset.renderer='webgl';
   if(done){done=false;canvas.dataset.state='open';onComplete?.()}
   if(running||(progress>=1&&animated&&!motion.matches)||targetLife>0||life>.001||lightChanging||Math.abs(yaw-targetYaw)>.0002||Math.abs(pitch-targetPitch)>.0002)request=requestAnimationFrame(frame);
  }
@@ -145,10 +148,11 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
  canvas.addEventListener('pointerup',event=>{if(!dragging)return;dragging=false;if(moved<7){const hit=intersect(event);if(hit>=0)onSelect?.(hit)}});canvas.addEventListener('pointercancel',()=>dragging=false);canvas.addEventListener('pointerleave',()=>{hovered=-1;invalidate()});
  canvas.tabIndex=0;canvas.setAttribute('aria-label','Объёмный цветок. Поверните перетаскиванием или клавишами со стрелками.');canvas.addEventListener('keydown',event=>{if(progress<1)return;let handled=true;if(event.key==='ArrowLeft')targetYaw=clamp(targetYaw-.14,-.55,.55);else if(event.key==='ArrowRight')targetYaw=clamp(targetYaw+.14,-.55,.55);else if(event.key==='ArrowUp')targetPitch=clamp(targetPitch-.08,-.25,.25);else if(event.key==='ArrowDown')targetPitch=clamp(targetPitch+.08,-.25,.25);else if(event.key==='Home'){targetYaw=.18;targetPitch=0}else handled=false;if(handled){event.preventDefault();invalidate()}});
  const observer=new ResizeObserver(size);observer.observe(canvas.parentElement);size();await renderer.compileAsync(scene,camera);renderer.render(scene,camera);canvas.dataset.ready='true';
- const visibility=()=>{lastFrame=0;invalidate()};document.addEventListener('visibilitychange',visibility);motion.addEventListener('change',visibility);
+ const visibility=()=>{lastFrame=0,lastSpread=-1;invalidate()};document.addEventListener('visibilitychange',visibility);motion.addEventListener('change',visibility);
  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visibility()},{threshold:.02});intersection.observe(canvas);
  return{play,finish,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
 }
+
 
 
 
