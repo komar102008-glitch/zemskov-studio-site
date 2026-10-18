@@ -9,6 +9,9 @@ const sections=[
 ];
 const body=document.body,root=document.querySelector('.experience'),canvas=document.querySelector('.model'),story=document.querySelector('.story'),menu=document.querySelector('.menu'),skip=document.querySelector('.skip'),replay=document.querySelector('.replay'),caption=document.querySelector('.scene-caption'),callouts=document.querySelector('.callouts');
 const motion=matchMedia('(prefers-reduced-motion:reduce)');let api=null,skipped=false,lastFocus=null;const tags=[],buttons=[];
+const movement=document.createElement('button');movement.type='button';movement.className='text-button movement';movement.textContent='Остановить движение';movement.setAttribute('aria-pressed','false');replay.before(movement);let movementPaused=false;
+movement.addEventListener('click',()=>{movementPaused=!movementPaused;api?.setAnimated(!movementPaused);movement.textContent=movementPaused?'Включить движение':'Остановить движение';movement.setAttribute('aria-pressed',String(movementPaused))});
+function syncMovement(){movement.hidden=motion.matches}motion.addEventListener('change',syncMovement);syncMovement();
 sections.forEach((section,i)=>{
  const tag=document.createElement('button');tag.type='button';tag.className='callout';tag.disabled=true;tag.setAttribute('aria-label',section[0]);tag.setAttribute('aria-pressed','false');tag.setAttribute('aria-controls','section-title');tag.innerHTML=`<small>0${i+1}</small>${section[0]}`;tag.addEventListener('click',event=>show(i,tag,event.detail===0));
  tag.addEventListener('keydown',event=>{let next;if(['ArrowRight','ArrowDown'].includes(event.key))next=(i+1)%6;if(['ArrowLeft','ArrowUp'].includes(event.key))next=(i+5)%6;if(event.key==='Home')next=0;if(event.key==='End')next=5;if(next!==undefined){event.preventDefault();tags[next].focus()}});tags.push(tag);callouts.append(tag);
