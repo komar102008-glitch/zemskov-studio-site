@@ -2,7 +2,7 @@
  const config=window.ZEMSKOV_CONTACT||{},form=document.querySelector('.request-form'),status=form.querySelector('.form-status'),submit=form.querySelector('.request-submit'),note=document.querySelector('.delivery-note'),links=document.querySelector('.contact-links');
  let sending=false;const initialLabel=config.activated?'Отправить заявку':'Отправить по почте';
  document.querySelectorAll('.menu-pages a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.menu').close()));
- if(config.email){const a=document.createElement('a');a.href='mailto:'+config.email;a.textContent=config.email;links.append(a);document.querySelector('.contact-pending').hidden=true;submit.disabled=false;submit.textContent=initialLabel;note.textContent=config.activated?'Заявка передаётся через FormSubmit на почту Никиты. Имя и контакт нужны для ответа по вашему проекту.':'Кнопка откроет почтовое приложение с готовой заявкой. Отправьте письмо из него. Также можно скопировать текст заявки.'}
+ if(config.email){const a=document.createElement('a');a.href='mailto:'+config.email;a.textContent=config.email;if(!links.querySelector('a[href="mailto:'+config.email+'"]'))links.append(a);document.querySelector('.contact-pending').hidden=true;submit.disabled=false;submit.textContent=initialLabel;note.textContent=config.activated?'Заявка передаётся через FormSubmit на почту Никиты. Имя и контакт нужны для ответа по вашему проекту.':'Кнопка откроет почтовое приложение с готовой заявкой. Отправьте письмо из него. Также можно скопировать текст заявки.'}
  if(config.telegram){const a=document.createElement('a');a.href=config.telegram;a.textContent='Написать в Telegram';a.target='_blank';a.rel='noopener noreferrer';links.append(a)}
  function message(data){return ['Заявка с сайта Zemskov studio','',`Имя: ${data.get('name')||'—'}`,`Контакт: ${data.get('contact')||'—'}`,`Задача: ${data.get('kind')||'—'}`,'',data.get('message')||'','',`Желаемые сроки: ${data.get('deadline')||'Обсудим'}`,`Ориентир по бюджету: ${data.get('budget')||'Обсудим'}`].join('\n')}
  function report(text,error=false){status.textContent=text;status.classList.toggle('is-error',error)}
@@ -23,3 +23,5 @@
  bubbles.forEach((node,index)=>{node.style.animationDelay=matchMedia('(max-width:700px)').matches?'0ms':`${index*100}ms`;node.classList.add('bubble-waiting');observer.observe(node)});
  motion.addEventListener('change',()=>{if(!motion.matches)return;observer.disconnect();bubbles.forEach(node=>node.classList.remove('bubble-waiting','bubble-visible'))});
 })();
+
+(()=>{document.querySelectorAll('[data-package]').forEach(link=>link.addEventListener('click',()=>{const panel=document.getElementById(link.dataset.package);if(panel)panel.open=true}))})();
