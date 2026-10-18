@@ -2,9 +2,9 @@
 <html lang="ru"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f2f1ee">
 <title>Zemskov studio — Никита</title><meta name="description" content="Я Никита. Создаю сайты. Меня вдохновляют творчество и возможность помогать людям продвигать свои продукты.">
-<link rel="stylesheet" href="polymer.css?v=mobile-1"><script src="polymer-ui.js?v=mobile-1" defer></script>
+<link rel="stylesheet" href="polymer.css?v=portfolio-1"><script src="polymer-ui.js?v=portfolio-1" defer></script>
 </head><body>
-<header><a class="brand" href="#" aria-label="Zemskov studio — к цветку"><span class="brand-symbol" aria-hidden="true">Z</span>Zemskov <span>studio</span></a><span class="header-note">НИКИТА<br>СОЗДАЮ САЙТЫ</span><button class="menu-toggle text-button" type="button" aria-haspopup="dialog">Разделы <span class="menu-sign" aria-hidden="true">+</span></button></header>
+<header><a class="brand" href="#" aria-label="Zemskov studio — к цветку"><span class="brand-symbol" aria-hidden="true">Z</span>Zemskov <span>studio</span></a><span class="header-note">НИКИТА<br>СОЗДАЮ САЙТЫ</span><nav class="header-links" aria-label="Основная навигация"><a href="#services">Задачи</a><a href="#faq">Вопросы</a><a href="#request">Обсудить сайт</a></nav><button class="menu-toggle text-button" type="button" aria-haspopup="dialog">Разделы <span class="menu-sign" aria-hidden="true">+</span></button></header>
 <main class="experience">
  <h1 class="wordmark" aria-label="Zemskov studio"><span>ZEM</span><span>SKOV</span></h1>
  <div class="scene">
@@ -16,7 +16,7 @@
   <div class="callouts" role="group" aria-label="Разделы на лепестках"></div>
   <p class="scene-caption" aria-live="polite">Цветок раскрывается.</p>
  </div>
- <div class="introduction"><div class="author-mark" aria-hidden="true">Н.</div><div><p class="eyebrow">01 / НИКИТА</p><h2>Создаю сайты.</h2><p>Меня вдохновляют творчество<br> и возможность помогать людям<br> продвигать свои продукты.</p></div></div>
+ <div class="introduction"><div class="author-mark" aria-hidden="true">Н.</div><div><p class="eyebrow">01 / НИКИТА</p><h2>Создаю сайты.</h2><p>Меня вдохновляют творчество<br> и возможность помогать людям<br> продвигать свои продукты.</p><a class="intro-link" href="#request">Обсудить сайт</a></div></div>
  <div class="chapter-note" aria-hidden="true"><span>ЛИЧНОЕ ПОРТФОЛИО</span><b>Форма<br>и движение.</b><small>Дизайн<br>Сайты<br>Творчество</small></div>
  <aside class="story" aria-labelledby="section-title" hidden>
   <div class="story-head"><span class="section-index"></span><button class="back text-button" type="button">К цветку <span aria-hidden="true">×</span></button></div>
@@ -25,9 +25,64 @@
  </aside>
  <button class="skip text-button" type="button">Пропустить вступление</button>
 </main>
-<footer><span>ZE / 2026</span><p>Лепестки открывают разделы</p><button class="replay text-button" type="button">Повторить раскрытие</button></footer>
-<dialog class="menu" aria-labelledby="menu-title"><div class="menu-head"><h2 id="menu-title">Знакомство</h2><button class="menu-close text-button" aria-label="Закрыть разделы" type="button">×</button></div><nav class="menu-nav" aria-label="Содержание сайта"></nav><p>Я Никита. Создаю сайты и хочу помогать людям продвигать свои продукты.</p></dialog>
+<div class="scene-controls"><span>ZE / 2026</span><p>Лепестки открывают разделы</p><button class="replay text-button" type="button">Повторить раскрытие</button></div>
+
+<div class="portfolio-content">
+ <nav class="page-nav" aria-label="Разделы портфолио"><a href="#services">Задачи</a><a href="#works">Работы</a><a href="#process">Процесс</a><a href="#faq">Вопросы</a><a href="#request">Заявка</a></nav>
+ <section class="portfolio-section services" id="services" aria-labelledby="services-title">
+  <div class="section-label"><span>01 / ЗАДАЧИ</span><span>Zemskov studio</span></div>
+  <div class="section-intro"><h2 id="services-title">Для чего вам<br>нужен сайт?</h2><p>Я создаю сайты. Меня интересуют задачи, в которых оформление помогает человеку рассказать о своём деле и показать продукт.</p></div>
+  <div class="service-list">
+   <article><span class="row-number">01</span><h3>Представить продукт<span class="price-line">От 15 000 ₽ · 7–10 рабочих дней</span></h3><p>Объяснить, что вы предлагаете, кому это нужно и как с вами связаться.</p></article>
+   <article><span class="row-number">02</span><h3>Рассказать о себе<span class="price-line">От 20 000 ₽ · 10–14 рабочих дней</span></h3><p>Собрать в одном месте информацию о вас, вашем деле и направлении работы.</p></article>
+   <article><span class="row-number">03</span><h3>Обновить сайт<span class="price-line">От 5 000 ₽ · от 3 рабочих дней</span></h3><p>Разобраться, что мешает текущей странице, и обсудить, что стоит изменить.</p></article>
+  </div>
+  <p class="pricing-note">Это ориентиры для простого сайта или небольших доработок. Точную стоимость, объём и срок согласуем после обсуждения задачи. Сроки считаются после согласования структуры и получения материалов.</p><a class="plain-link" href="#request">Рассказать о своей задаче</a>
+ </section>
+ <section class="portfolio-section works" id="works" aria-labelledby="works-title">
+  <div class="section-label"><span>02 / РАБОТЫ</span><span>Портфолио</span></div>
+  <div class="section-intro"><h2 id="works-title">Здесь будут<br>мои работы.</h2><div><p>Готовых проектов для портфолио пока нет. Буду добавлять их по мере появления.</p><p class="muted-copy">Сейчас здесь можно познакомиться со мной и обсудить свой будущий сайт.</p><a class="plain-link" href="#request">Обсудить проект</a></div></div>
+ </section>
+ <section class="portfolio-section process" id="process" aria-labelledby="process-title">
+  <div class="section-label"><span>03 / ПРОЦЕСС</span><span>От разговора к сайту</span></div>
+  <div class="section-intro"><h2 id="process-title">Начнём<br>с разговора.</h2><p>Необязательно сразу составлять подробное техническое задание. Для начала достаточно рассказать, чем вы занимаетесь и какой сайт вам нужен.</p></div>
+  <ol class="process-list">
+   <li><span class="row-number">01</span><div><h3>Обсудим задачу</h3><p>Что вы предлагаете, кто ваши посетители и что им нужно узнать. Заодно уточним объём, сроки и бюджет.</p></div></li>
+   <li><span class="row-number">02</span><div><h3>Наметим структуру и оформление</h3><p>Какие разделы нужны, что поставить на первый экран и какие материалы подготовить.</p></div></li>
+   <li><span class="row-number">03</span><div><h3>Согласуем сборку и публикацию</h3><p>Как будет выглядеть сайт на телефоне и компьютере, где его разместить и что проверить перед запуском.</p></div></li>
+  </ol>
+ </section>
+ <section class="portfolio-section faq" id="faq" aria-labelledby="faq-title">
+  <div class="section-label"><span>04 / ВОПРОСЫ</span><span>Перед началом</span></div>
+  <div class="faq-layout"><h2 id="faq-title">Что обычно<br>хотят узнать.</h2><div class="faq-list">
+   <details><summary>Сколько будет стоить сайт?<span aria-hidden="true">+</span></summary><div><p>Ориентир для одностраничного сайта — от 15 000 ₽, личного сайта — от 20 000 ₽, небольших доработок — от 5 000 ₽. Для точной оценки нужно понять объём: сколько страниц и разделов требуется, какие материалы уже есть и какие функции нужны. Расскажите об этом в заявке — стоимость можно будет обсудить предметно.</p></div></details>
+   <details><summary>Сколько времени займёт работа?<span aria-hidden="true">+</span></summary><div><p>Для простого одностраничного сайта ориентир — 7–10 рабочих дней, для личного сайта — 10–14. Небольшие доработки — от 3 рабочих дней. Срок зависит от объёма сайта и готовности материалов. Если у вас есть важная дата запуска, укажите её в заявке — обсудим, что можно успеть.</p></div></details>
+   <details><summary>Нужно ли готовое техническое задание?<span aria-hidden="true">+</span></summary><div><p>Чтобы начать разговор, достаточно описать своё дело, цель сайта и привести несколько примеров того, что вам нравится. Подробности можно уточнить после знакомства.</p></div></details>
+   <details><summary>А если пока нет текстов и фотографий?<span aria-hidden="true">+</span></summary><div><p>Напишите, какие материалы уже есть и чего не хватает. Это поможет заранее понять объём подготовки и обсудить, как поступить с недостающими текстами и изображениями.</p></div></details>
+   <details><summary>Можно обсудить переделку существующего сайта?<span aria-hidden="true">+</span></summary><div><p>Да. Пришлите ссылку и расскажите, что хотите изменить: оформление, структуру, мобильную версию или способ связи с посетителями.</p></div></details>
+   <details><summary>Что с доменом и хостингом?<span aria-hidden="true">+</span></summary><div><p>Укажите, есть ли у вас домен и где сейчас размещён сайт. Если сайта ещё нет, способ публикации и связанные расходы обсудим до начала работы.</p></div></details>
+  </div></div>
+ </section>
+ <section class="portfolio-section request" id="request" aria-labelledby="request-title">
+  <div class="section-label"><span>05 / СВЯЗЬ</span><span>Расскажите о своём деле</span></div>
+  <div class="request-layout"><div class="request-intro"><h2 id="request-title">Какой сайт<br>вам нужен?</h2><p>Я Никита. Напишите, чем занимаетесь и что хотите показать на сайте. Можно начать с нескольких предложений.</p><div class="contact-links" aria-label="Контакты"></div><p class="contact-pending">Контакты и способ отправки заявки пока настраиваются.</p></div>
+  <form class="request-form" novalidate>
+   <div class="form-pair"><label>Как вас зовут<input name="name" autocomplete="name" maxlength="80" required placeholder="Ваше имя"></label><label>Куда ответить<input name="contact" autocomplete="email" maxlength="160" required placeholder="Email или @telegram"></label></div>
+   <label>Что вы планируете<select name="kind"><option value="Пока хочу обсудить">Пока хочу обсудить</option><option>Сайт продукта или услуги</option><option>Личный сайт</option><option>Обновление существующего сайта</option><option>Другая задача</option></select></label>
+   <label>Несколько слов о задаче<textarea name="message" rows="4" minlength="15" maxlength="4000" required placeholder="Чем вы занимаетесь, кому нужен сайт и что на нём должно быть?"></textarea></label>
+   <div class="form-pair"><label>Сроки, если уже известны<input name="deadline" maxlength="100" placeholder="Например, месяц или дата"></label><label>Бюджет, если есть ориентир<input name="budget" maxlength="100" placeholder="Можно оставить пустым"></label></div>
+   <label class="consent"><input name="consent" type="checkbox" required><span>Можно связаться со мной по указанному контакту, чтобы обсудить заявку.</span></label>
+   <p class="delivery-note" id="delivery-note">Форма будет доступна после подключения способа отправки.</p>
+   <div class="form-actions"><button class="action-button request-submit" type="submit" disabled>Отправка пока не подключена</button><button class="copy-request plain-link" type="button">Скопировать текст заявки</button></div>
+   <p class="form-status" role="status" aria-live="polite"></p>
+  </form></div>
+ </section>
+ <footer class="site-footer"><a href="#">Zemskov studio</a><p>Никита · Создаю сайты</p><a href="#services">К разделам</a></footer>
+</div>
+
+<dialog class="menu" aria-labelledby="menu-title"><div class="menu-head"><h2 id="menu-title">Знакомство</h2><button class="menu-close text-button" aria-label="Закрыть разделы" type="button">×</button></div><nav class="menu-nav" aria-label="Содержание сайта"></nav><nav class="menu-pages" aria-label="Страницы портфолио"><a href="#services">Задачи</a><a href="#works">Работы</a><a href="#process">Процесс</a><a href="#faq">Вопросы</a><a href="#request">Связаться</a></nav><p>Я Никита. Создаю сайты и хочу помогать людям продвигать свои продукты.</p></dialog>
 <noscript><style>.poster{opacity:1}.introduction{opacity:1}.skip,.replay,.menu-toggle{display:none}</style><section class="no-js"><h2>Обо мне</h2><p>Я Никита. Создаю сайты. Меня вдохновляют творчество и возможность помогать людям продвигать свои продукты. Готовых работ для портфолио пока нет.</p></section></noscript>
+<script src="contact-config.js?v=portfolio-1"></script><script src="portfolio.js?v=portfolio-1" defer></script>
 </body></html>
 
 
