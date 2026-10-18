@@ -71,7 +71,18 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(37,1,.1,40);camera.position.set(.45,.25,10.3);camera.lookAt(0,-.45,0);
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.025).texture;room.dispose();pmrem.dispose();
- const background=document.createElement('canvas');background.width=3072;background.height=2048;const bg=background.getContext('2d');await document.fonts.ready;bg.fillStyle='#f2f1ee';bg.fillRect(0,0,3072,2048);bg.fillStyle='#202120';bg.font=small?'800 300px Manrope, Arial':'800 480px Manrope, Arial';bg.fillText('ZEM',small?760:-10,715);const wordWidth=bg.measureText('SKOV').width;bg.fillText('SKOV',(small?2300:3070)-wordWidth,1250);const typography=new THREE.CanvasTexture(background);typography.colorSpace=THREE.SRGBColorSpace;const backplate=new THREE.Mesh(new THREE.PlaneGeometry(14,9.3),new THREE.MeshBasicMaterial({map:typography,toneMapped:false}));backplate.position.set(0,-.45,-3.3);scene.add(backplate);
+ await document.fonts.ready;
+ const backplate=new THREE.Mesh(new THREE.PlaneGeometry(22,12),new THREE.MeshBasicMaterial({color:0xf2f1ee,toneMapped:false}));backplate.position.set(0,-.45,-3.32);scene.add(backplate);
+ const fontSize=small?300:480,pxX=14/3072,pxY=9.3/2048;
+ function makeWord(word,left,baseline,direction){
+  const bitmap=document.createElement('canvas'),measure=bitmap.getContext('2d');measure.font='800 '+fontSize+'px Manrope, Arial';bitmap.width=Math.ceil(measure.measureText(word).width)+12;bitmap.height=Math.ceil(fontSize*1.05);
+  const ink=bitmap.getContext('2d');ink.fillStyle='#f2f1ee';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle='#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
+  const texture=new THREE.CanvasTexture(bitmap);texture.colorSpace=THREE.SRGBColorSpace;const wordMesh=new THREE.Mesh(new THREE.PlaneGeometry(bitmap.width*pxX,bitmap.height*pxY),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
+  const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction};
+ }
+ const metric=document.createElement('canvas').getContext('2d');metric.font='800 '+fontSize+'px Manrope, Arial';
+ const words=[makeWord('ZEM',small?760:-10,715,-1),makeWord('SKOV',(small?2300:3070)-metric.measureText('SKOV').width,1250,1)];
+
  const model=new THREE.Group();scene.add(model);const head=new THREE.Group();head.position.y=.28;model.add(head);
  scene.add(new THREE.AmbientLight(0xffffff,.8));
  const key=new THREE.DirectionalLight(0xffffff,3.5);key.position.set(-3.5,4.5,5);key.castShadow=true;key.shadow.mapSize.set(small?512:1024,small?512:1024);key.shadow.camera.left=-3;key.shadow.camera.right=3;key.shadow.camera.top=3;key.shadow.camera.bottom=-3;key.shadow.camera.near=.5;key.shadow.camera.far=15;key.shadow.bias=-.001;key.shadow.normalBias=.025;scene.add(key);
@@ -115,6 +126,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels}){
   for(const uniforms of uniformSets){uniforms.uTime.value=lifeTime;uniforms.uLife.value=life}
   canvas.dataset.motion=targetLife?'living':life>.001?'settling':'paused';
   if(running){progress=clamp((now-started)/5400);if(progress>=1){running=false;done=true}}
+  const spread=1-Math.pow(1-clamp((progress-.08)/.82),3);for(const word of words)word.mesh.position.x=word.homeX-word.direction*(small?.65:1.65)*(1-spread);canvas.dataset.typeSpread=spread.toFixed(3);
   const ease=smooth(progress);for(let i=0;i<6;i++)uniformSets[i].uOpen.value=smooth(clamp((progress-.035*i)/(.825)));
   head.rotation.x=THREE.MathUtils.lerp(-1.24,-.32,ease);head.rotation.y=.17*Math.sin(progress*Math.PI);core.scale.setScalar(.23+.77*smooth((progress-.28)/.65));
   yaw=THREE.MathUtils.lerp(yaw,targetYaw,.13);pitch=THREE.MathUtils.lerp(pitch,targetPitch,.13);model.rotation.y=yaw;model.rotation.x=pitch;
