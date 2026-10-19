@@ -205,4 +205,10 @@ html[data-theme=dark] .is-ready .callout.is-selected{color:#241b15;background:#e
 @media(min-width:1101px){.has-section .callout{font-size:14px}}
 @media(max-width:700px){.callouts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:3px 22px 0}.callout,.is-ready .callout{white-space:normal;min-height:48px;font-size:12px;padding:9px 10px;border:1px solid #c6aa8a;box-shadow:inset 0 1px 0 #ffffffa6}.callout:nth-child(n+4){border-bottom:1px solid #c6aa8a}.callout:disabled{opacity:.5}.is-ready .callout.is-selected{background:#c8431d;color:#fff8ed;border-color:#c8431d}html[data-theme=dark] .callout,html[data-theme=dark] .is-ready .callout{border-color:#81735b}html[data-theme=dark] .is-ready .callout.is-selected{color:#241b15;background:#ef9a54;border-color:#ef9a54}}
 @media(max-width:360px){.callouts{margin-inline:18px;gap:8px}.callout,.is-ready .callout{font-size:11px;padding-inline:8px;gap:5px}}
+/* Scroll controls the flower, while the document keeps native scrolling. */
+.bloom-scroll{position:relative}
+.scroll-bloom .scene-caption{opacity:1}
+@media(min-width:1101px) and (prefers-reduced-motion:no-preference){.scroll-bloom .bloom-scroll{height:calc(var(--bloom-height,650px) + min(620px,75svh));padding-bottom:0}.scroll-bloom .bloom-scroll>.experience{position:sticky;top:0}}
+@media(max-width:700px){.scroll-bloom .callout{opacity:.65;pointer-events:auto}.scroll-bloom.is-ready .callout{opacity:1}}
+
 

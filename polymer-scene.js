@@ -64,7 +64,7 @@ function inject(material,uniforms,normal=true){
  material.customProgramCacheKey=()=>normal?'zemskov-petal-v2':'zemskov-petal-depth-v2';
 }
 
-export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onTypeSpread}){
+export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onTypeSpread,onPhase}){
  const small=matchMedia('(max-width:700px)').matches;
  const lowPower=small&&Boolean(navigator.connection?.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=4));canvas.dataset.quality=small?(lowPower?'light':'mobile'):'full';
  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});
@@ -117,6 +117,8 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  if(!small){const gridPoints=[];for(let n=-12;n<=12;n++){for(let k=-24;k<24;k++){const x=n*.5,z=k*.25;gridPoints.push(x,-3.555,z,x,-3.555,z+.25,z,-3.555,x,z+.25,-3.555,x)}}const gridGeometry=new THREE.BufferGeometry();gridGeometry.setAttribute('position',new THREE.Float32BufferAttribute(gridPoints,3));scene.add(new THREE.LineSegments(gridGeometry,new THREE.LineBasicMaterial({color:0xc5c9c6,transparent:true,opacity:.22})));}
  const motion=matchMedia('(prefers-reduced-motion:reduce)');let request=0,started=0,running=false,done=false,progress=0,selected=-1,hovered=-1,dragging=false,lastX=0,lastY=0,moved=0,yaw=.18,pitch=0,targetYaw=.18,targetPitch=0;
  const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
+ let growing=false,growth=0,growthStarted=0,scrollDriven=false,scrollTarget=0,reportedOpen=false,lastPhase='';
+ botanical.scale.set(.25,.02,.25);
  let animated=true,visible=true,life=0,lifeTime=0,lastFrame=0,lastSpread=-1,slowFrames=0,qualityReduced=lowPower;
  function labels(){if(small)return;head.updateMatrixWorld(true);const points=shapes.map(shape=>{const v=new THREE.Vector3(Math.cos(shape.angle)*shape.length*.69,Math.sin(shape.angle)*shape.length*.69,.16);head.localToWorld(v);v.project(camera);return{x:(v.x+1)*50,y:(1-v.y)*50}});onLabels?.(points)}
  function size(){const width=canvas.parentElement.clientWidth,height=canvas.parentElement.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;if(small){camera.position.set(.2,.25,10.8/Math.min(1,camera.aspect));camera.lookAt(0,-.4,0)}camera.updateProjectionMatrix();invalidate()}
@@ -126,22 +128,27 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
   botanical.rotation.z=life*(.025*Math.sin(lifeTime*.48)+.009*Math.sin(lifeTime*.91));botanical.rotation.x=life*.014*Math.sin(lifeTime*.57+.7);
   for(const uniforms of uniformSets){uniforms.uTime.value=lifeTime;uniforms.uLife.value=life}
   canvas.dataset.motion=targetLife?'living':life>.001?'settling':'paused';
-  if(running){progress=clamp((now-started)/5400);if(progress>=1){running=false;done=true}}
+  if(growing){growth=clamp((now-growthStarted)/1900);if(growth>=1)growing=false;}
+  const grown=1-Math.pow(1-growth,3);botanical.scale.set(.25+.75*grown,.02+.98*grown,.25+.75*grown);
+  if(scrollDriven&&!growing){progress+=(scrollTarget-progress)*(1-Math.exp(-dt*9));if(Math.abs(scrollTarget-progress)<.0008)progress=scrollTarget;}
+  if(progress>=.999&&!reportedOpen){reportedOpen=true;done=true;}if(progress<.98)reportedOpen=false;
+  const phase=growing?'growing':progress>=.99?'open':'scrolling';if(phase!==lastPhase){lastPhase=phase;canvas.dataset.state=phase;onPhase?.(phase);}
   const spread=1-Math.pow(1-clamp((progress-.08)/.82),3);for(const word of words)word.mesh.position.x=word.homeX-word.direction*(small?.65:1.65)*(1-spread);canvas.dataset.typeSpread=spread.toFixed(3);if(spread!==lastSpread){onTypeSpread?.(spread);lastSpread=spread}
   const ease=smooth(progress);for(let i=0;i<6;i++)uniformSets[i].uOpen.value=smooth(clamp((progress-.035*i)/(.825)));
   head.rotation.x=THREE.MathUtils.lerp(-1.24,-.32,ease);head.rotation.y=.17*Math.sin(progress*Math.PI);core.scale.setScalar(.23+.77*smooth((progress-.28)/.65));
   yaw=THREE.MathUtils.lerp(yaw,targetYaw,.13);pitch=THREE.MathUtils.lerp(pitch,targetPitch,.13);model.rotation.y=yaw;model.rotation.x=pitch;
-  const light=.18+.82*smooth(progress/.22);key.intensity=3.5*light;rim.intensity=2.8*light;
+  const light=.35+.65*smooth(growth/.65);key.intensity=3.5*light;rim.intensity=2.8*light;
   let lightChanging=false;for(let i=0;i<6;i++){const target=(i===hovered||i===selected)? .025:0,material=meshes[i].material;material.emissiveIntensity=THREE.MathUtils.lerp(material.emissiveIntensity,target,.17);if(Math.abs(material.emissiveIntensity-target)>.0004)lightChanging=true}
   const renderStart=performance.now();renderer.render(scene,camera);
   if(small&&!qualityReduced&&progress>=1){slowFrames=performance.now()-renderStart>25?slowFrames+1:Math.max(0,slowFrames-1);if(slowFrames>=12){qualityReduced=true;renderer.setPixelRatio(Math.min(devicePixelRatio,.85));renderer.transmissionResolutionScale=.25;canvas.dataset.quality='light'}}
-  labels();canvas.dataset.progress=progress.toFixed(3);canvas.dataset.renderer='webgl';
+  labels();canvas.dataset.growth=growth.toFixed(3);canvas.dataset.progress=progress.toFixed(3);canvas.dataset.renderer='webgl';
   if(done){done=false;canvas.dataset.state='open';onComplete?.()}
-  if(running||(progress>=1&&animated&&!motion.matches)||targetLife>0||life>.001||lightChanging||Math.abs(yaw-targetYaw)>.0002||Math.abs(pitch-targetPitch)>.0002)request=requestAnimationFrame(frame);
+  if(growing||(scrollDriven&&Math.abs(progress-scrollTarget)>.0004)||(progress>=1&&animated&&!motion.matches)||targetLife>0||life>.001||lightChanging||Math.abs(yaw-targetYaw)>.0002||Math.abs(pitch-targetPitch)>.0002)request=requestAnimationFrame(frame);
  }
  function invalidate(){if(!request)request=requestAnimationFrame(frame)}
- function finish(){running=false;progress=1;done=true;invalidate()}
- function play(){if(motion.matches){finish();return}progress=0;started=performance.now();running=true;done=false;targetYaw=.18;targetPitch=0;canvas.dataset.state='opening';invalidate()}
+ function finish(){running=false;growing=false;growth=1;scrollDriven=false;scrollTarget=1;progress=1;done=true;invalidate()}
+ function play(){if(motion.matches){finish();return}progress=0;scrollTarget=0;growth=0;growthStarted=performance.now();growing=true;scrollDriven=true;reportedOpen=false;lastPhase='';running=false;done=false;targetYaw=.18;targetPitch=0;canvas.dataset.state='growing';invalidate()}
+ function setScrollProgress(value){if(!scrollDriven)return;const next=clamp(value);if(Math.abs(next-scrollTarget)<.0001)return;scrollTarget=next;invalidate()}
  function intersect(event){const rect=canvas.getBoundingClientRect();pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);ray.setFromCamera(pointer,camera);return ray.intersectObjects(meshes)[0]?.object.userData.index??-1}
  canvas.addEventListener('pointerdown',event=>{if(progress<1)return;dragging=true;lastX=event.clientX;lastY=event.clientY;moved=0;canvas.setPointerCapture(event.pointerId)});
  canvas.addEventListener('pointermove',event=>{if(progress<1)return;if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;moved+=Math.abs(dx)+Math.abs(dy);targetYaw=clamp(targetYaw+dx*.004,-.55,.55);targetPitch=clamp(targetPitch+dy*.003,-.25,.25);lastX=event.clientX;lastY=event.clientY;invalidate()}else{const hit=intersect(event);if(hit!==hovered){hovered=hit;canvas.style.cursor=hit<0?'grab':'pointer';invalidate()}}});
@@ -158,8 +165,9 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const observer=new ResizeObserver(size);observer.observe(canvas.parentElement);size();await renderer.compileAsync(scene,camera);renderer.render(scene,camera);canvas.dataset.ready='true';
  const visibility=()=>{lastFrame=0,lastSpread=-1;invalidate()};document.addEventListener('visibilitychange',visibility);motion.addEventListener('change',visibility);
  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visibility()},{threshold:.02});intersection.observe(canvas);
- return{play,finish,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){window.removeEventListener('nikita-theme-change',syncSceneTheme);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
+ return{play,finish,setScrollProgress,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){window.removeEventListener('nikita-theme-change',syncSceneTheme);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
 }
+
 
 
 
