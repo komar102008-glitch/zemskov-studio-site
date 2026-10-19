@@ -74,15 +74,15 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.025).texture;room.dispose();pmrem.dispose();
  await document.fonts.ready;
  const backplate=new THREE.Mesh(new THREE.PlaneGeometry(22,12),new THREE.MeshBasicMaterial({color:0xf7f2e9,toneMapped:false}));backplate.position.set(0,-.45,-3.32);scene.add(backplate);
- const fontSize=small?300:480,pxX=14/3072,pxY=9.3/2048;
+ const fontSize=small?300:320,pxX=14/3072,pxY=9.3/2048;
  function makeWord(word,left,baseline,direction){
   const bitmap=document.createElement('canvas'),measure=bitmap.getContext('2d');measure.font='800 '+fontSize+'px Manrope, Arial';bitmap.width=Math.ceil(measure.measureText(word).width)+12;bitmap.height=Math.ceil(fontSize*1.05);
-  const ink=bitmap.getContext('2d');ink.fillStyle='#f7f2e9';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle=word==='SKOV'?'#d74b22':'#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
+  const ink=bitmap.getContext('2d');ink.fillStyle='#f7f2e9';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle=word==='ZEMSKOV'?'#d74b22':'#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
   const texture=new THREE.CanvasTexture(bitmap);texture.colorSpace=THREE.SRGBColorSpace;const wordMesh=new THREE.Mesh(new THREE.PlaneGeometry(bitmap.width*pxX,bitmap.height*pxY),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
   const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction};
  }
  const metric=document.createElement('canvas').getContext('2d');metric.font='800 '+fontSize+'px Manrope, Arial';
- const words=small?[]:[makeWord('ZEM',small?760:-10,715,-1),makeWord('SKOV',(small?2300:3070)-metric.measureText('SKOV').width,1250,1)];
+ const words=small?[]:[makeWord('NIKITA',small?760:-10,715,-1),makeWord('ZEMSKOV',(small?2300:3070)-metric.measureText('ZEMSKOV').width,1250,1)];
 
  const model=new THREE.Group();scene.add(model);const head=new THREE.Group();head.position.y=.28;model.add(head);
  scene.add(new THREE.AmbientLight(0xffffff,.8));

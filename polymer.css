@@ -119,3 +119,7 @@ button,.intro-link,.package-link{border-radius:28px}
 .faq-list summary{border-radius:28px}.form-actions [hidden]{display:none!important}
 @media(max-width:700px){.callout,.is-ready .callout{border:1px solid #d8c9bb;border-radius:999px;padding:10px 9px}.callout:nth-child(n+4){border-bottom:1px solid #d8c9bb}.callouts{gap:8px;border:0}.movement,.replay{font-size:10px;text-align:center}.scene-controls{gap:10px}.scene-controls>span{padding-top:8px}.scene-controls .movement,.scene-controls .replay{padding:8px 10px}.package-list summary{padding-inline:10px}}
 @media(max-width:1100px){.introduction .accent-copy::before{content:" ";white-space:pre}}
+/* The full personal name retains the split title animation. */
+.brand>span:not(.brand-symbol){font:inherit;letter-spacing:inherit}
+.wordmark{font-size:clamp(70px,10vw,150px)}
+@media(max-width:700px){.wordmark,.is-webgl .wordmark{font-size:clamp(26px,9.5vw,56px);gap:8px}}
