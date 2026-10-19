@@ -68,16 +68,16 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const small=matchMedia('(max-width:700px)').matches;
  const lowPower=small&&Boolean(navigator.connection?.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=4));canvas.dataset.quality=small?(lowPower?'light':'mobile'):'full';
  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});
- renderer.setPixelRatio(Math.min(devicePixelRatio,small?(lowPower?.85:1):1.6));renderer.setClearColor(0xf2f1ee,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.transmissionResolutionScale=small?(lowPower?.25:.35):.75;
+ renderer.setPixelRatio(Math.min(devicePixelRatio,small?(lowPower?.85:1):1.6));renderer.setClearColor(0xf7f2e9,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.transmissionResolutionScale=small?(lowPower?.25:.35):.75;
  renderer.shadowMap.enabled=!small;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(37,1,.1,40);camera.position.set(.45,.25,10.3);camera.lookAt(0,-.45,0);
  const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.025).texture;room.dispose();pmrem.dispose();
  await document.fonts.ready;
- const backplate=new THREE.Mesh(new THREE.PlaneGeometry(22,12),new THREE.MeshBasicMaterial({color:0xf2f1ee,toneMapped:false}));backplate.position.set(0,-.45,-3.32);scene.add(backplate);
+ const backplate=new THREE.Mesh(new THREE.PlaneGeometry(22,12),new THREE.MeshBasicMaterial({color:0xf7f2e9,toneMapped:false}));backplate.position.set(0,-.45,-3.32);scene.add(backplate);
  const fontSize=small?300:480,pxX=14/3072,pxY=9.3/2048;
  function makeWord(word,left,baseline,direction){
   const bitmap=document.createElement('canvas'),measure=bitmap.getContext('2d');measure.font='800 '+fontSize+'px Manrope, Arial';bitmap.width=Math.ceil(measure.measureText(word).width)+12;bitmap.height=Math.ceil(fontSize*1.05);
-  const ink=bitmap.getContext('2d');ink.fillStyle='#f2f1ee';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle='#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
+  const ink=bitmap.getContext('2d');ink.fillStyle='#f7f2e9';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle=word==='SKOV'?'#d74b22':'#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
   const texture=new THREE.CanvasTexture(bitmap);texture.colorSpace=THREE.SRGBColorSpace;const wordMesh=new THREE.Mesh(new THREE.PlaneGeometry(bitmap.width*pxX,bitmap.height*pxY),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
   const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction};
  }
@@ -91,7 +91,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const meshes=[],uniformSets=[];
  for(let i=0;i<6;i++){
   const shape=shapes[i],uniforms={uOpen:{value:0},uAngle:{value:shape.angle},uLength:{value:shape.length},uWidth:{value:shape.width},uPhase:{value:shape.phase},uTime:{value:0},uLife:{value:0}};
-  const material=new THREE.MeshPhysicalMaterial({color:0xe7eae8,roughness:small?.16:.105,metalness:0,transmission:.93,thickness:.28,ior:1.47,attenuationColor:0xcbd6d1,attenuationDistance:3.5,clearcoat:1,clearcoatRoughness:.08,dispersion:small?0:.025,envMapIntensity:1.35,side:THREE.DoubleSide,emissive:0x000000,emissiveIntensity:0});inject(material,uniforms);
+  const material=new THREE.MeshPhysicalMaterial({color:0xf5e4d3,roughness:small?.16:.105,metalness:0,transmission:.93,thickness:.28,ior:1.47,attenuationColor:0xeebc91,attenuationDistance:3.5,clearcoat:1,clearcoatRoughness:.08,dispersion:small?0:.025,envMapIntensity:1.35,side:THREE.DoubleSide,emissive:0x000000,emissiveIntensity:0});inject(material,uniforms);
   const mesh=new THREE.Mesh(makeGeometry(shape,i,small),material);mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=false;mesh.userData.index=i;
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.DoubleSide});inject(depth,uniforms,false);mesh.customDepthMaterial=depth;head.add(mesh);meshes.push(mesh);uniformSets.push(uniforms);
  }
@@ -99,7 +99,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const stemCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(.07,-3.05,-.23),new THREE.Vector3(-.10,-2.05,-.17),new THREE.Vector3(.05,-.92,-.1),new THREE.Vector3(0,.28,0)]);
  const stem=new THREE.Mesh(new THREE.TubeGeometry(stemCurve,42,.025,7,false),stemMat);model.add(stem);
  const leafGeo=new THREE.BufferGeometry(),lp=[],lu=[],li=[];for(let j=0;j<=26;j++)for(let k=0;k<=12;k++){const t=j/26,u=k/12*2-1,w=.29*Math.pow(Math.sin(Math.PI*t),.8);lp.push(.06+1.06*t,-1.72+.58*t+u*w,-.15+.21*Math.sin(t*Math.PI)+.12*u*u);lu.push(.61+.28*t,1-(.84+.1*t+u*w*.18))}for(let j=0;j<26;j++)for(let k=0;k<12;k++){const a=j*13+k;li.push(a,a+13,a+1,a+1,a+13,a+14)}leafGeo.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));leafGeo.setAttribute('uv',new THREE.Float32BufferAttribute(lu,2));leafGeo.setIndex(li);leafGeo.computeVertexNormals();const leaf=new THREE.Mesh(leafGeo,new THREE.MeshStandardMaterial({color:0x303434,side:THREE.DoubleSide,roughness:.95}));leaf.visible=false;model.add(leaf);
- const core=new THREE.Group();head.add(core);const gold=new THREE.MeshStandardMaterial({color:0x999d99,roughness:.3,metalness:1}),base=new THREE.Mesh(new THREE.SphereGeometry(.17,24,18),new THREE.MeshStandardMaterial({color:0xadb2af,roughness:.17,metalness:1}));base.scale.set(1,1,.8);core.add(base);
+ const core=new THREE.Group();head.add(core);const gold=new THREE.MeshStandardMaterial({color:0xc8783e,roughness:.3,metalness:1}),base=new THREE.Mesh(new THREE.SphereGeometry(.17,24,18),new THREE.MeshStandardMaterial({color:0xadb2af,roughness:.17,metalness:1}));base.scale.set(1,1,.8);core.add(base);
  const n=small?88:190,pollen=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.012,.025,small?2:3,small?5:6),gold,n),dummy=new THREE.Object3D(),up=new THREE.Vector3(0,1,0),fp=[],fn=[],fi=[];
  for(let i=0;i<n;i++){
   const theta=i*2.399963,r=Math.sqrt((i+.5)/n)*.27,h=.19+.26*(1-r/.37)+.025*Math.sin(i*3.1),start=new THREE.Vector3(Math.cos(theta)*r*.55,Math.sin(theta)*r*.55,.06),end=new THREE.Vector3(Math.cos(theta)*r*1.48,Math.sin(theta)*r*1.48,h);
