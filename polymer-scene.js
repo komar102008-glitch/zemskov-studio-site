@@ -151,6 +151,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
   const dark=document.documentElement.dataset.theme==='dark',paper=dark?'#20211f':'#f7f2e9',ink=dark?'#f3eee3':'#202120',accent=dark?'#ef9a54':'#d74b22';
   backplate.material.color.set(paper);renderer.setClearColor(paper,0);
   for(const item of words){const ctx=item.bitmap.getContext('2d');ctx.fillStyle=paper;ctx.fillRect(0,0,item.bitmap.width,item.bitmap.height);ctx.fillStyle=item.word==='ZEMSKOV'?accent:ink;ctx.font='800 '+fontSize+'px Manrope, Arial';ctx.fillText(item.word,6,fontSize*.82);item.texture.needsUpdate=true;}
+  if(canvas.dataset.ready==='true')renderer.render(scene,camera);
   invalidate();
  }
  window.addEventListener('nikita-theme-change',syncSceneTheme);syncSceneTheme();
@@ -159,6 +160,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visibility()},{threshold:.02});intersection.observe(canvas);
  return{play,finish,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){window.removeEventListener('nikita-theme-change',syncSceneTheme);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
 }
+
 
 
 

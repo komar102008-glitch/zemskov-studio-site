@@ -9,6 +9,18 @@
   if(save){try{localStorage.setItem(key,dark?'dark':'light')}catch{}window.dispatchEvent(new Event('nikita-theme-change'));}
  }
  apply(dark);
- document.addEventListener('DOMContentLoaded',()=>{apply(dark);document.querySelector('.theme-toggle')?.addEventListener('click',()=>apply(!dark,true));});
+ let switching=false;
+ async function toggle(){
+  if(switching)return;switching=true;
+  const next=!dark,button=document.querySelector('.theme-toggle');button?.setAttribute('aria-busy','true');
+  try{
+   if(next&&document.fonts)await document.fonts.load('400 16px "Golos Text"').catch(()=>{});
+   if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+    const transition=document.startViewTransition(()=>apply(next,true));
+    await transition.finished.catch(()=>{});
+   }else apply(next,true);
+  }finally{switching=false;button?.removeAttribute('aria-busy');}
+ }
+ document.addEventListener('DOMContentLoaded',()=>{apply(dark);document.querySelector('.theme-toggle')?.addEventListener('click',toggle);});
  window.addEventListener('storage',event=>{if(event.key===key)apply(event.newValue==='dark',true)});
 })();

@@ -1,7 +1,7 @@
 (()=>{
  const config=window.ZEMSKOV_CONTACT||{},form=document.querySelector('.request-form'),status=form.querySelector('.form-status'),submit=form.querySelector('.request-submit'),note=document.querySelector('.delivery-note'),links=document.querySelector('.contact-links');
  let sending=false;const initialLabel=config.activated?'Отправить заявку':'Отправить по почте';
- document.querySelectorAll('.menu-pages a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.menu').close()));
+ document.querySelectorAll('.menu-pages a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.menu').dispatchEvent(new Event('nikita-menu-dismiss'))));
  if(config.email){const a=document.createElement('a');a.href='mailto:'+config.email;a.textContent=config.email;if(!links.querySelector('a[href="mailto:'+config.email+'"]'))links.append(a);document.querySelector('.contact-pending').hidden=true;submit.disabled=false;submit.textContent=initialLabel;note.textContent=config.activated?'Заявка передаётся через FormSubmit на почту Никиты. Имя и контакт нужны для ответа по вашему проекту.':'Кнопка откроет почтовое приложение с готовой заявкой. Отправьте письмо из него. Также можно скопировать текст заявки.'}
  if(config.telegram){const a=document.createElement('a');a.href=config.telegram;a.textContent='Написать в Telegram';a.target='_blank';a.rel='noopener noreferrer';links.append(a)}
  function message(data){return ['Заявка с сайта Nikita Zemskov','',`Имя: ${data.get('name')||'—'}`,`Контакт: ${data.get('contact')||'—'}`,`Задача: ${data.get('kind')||'—'}`,'',data.get('message')||'','',`Желаемые сроки: ${data.get('deadline')||'Обсудим'}`,`Ориентир по бюджету: ${data.get('budget')||'Обсудим'}`].join('\n')}
@@ -26,5 +26,3 @@
 
 (()=>{document.querySelectorAll('[data-package]').forEach(link=>link.addEventListener('click',()=>{const panel=document.getElementById(link.dataset.package);if(panel)panel.open=true}))})();
 
-// Brief bubble feedback uses only compositor-friendly transforms.
-(()=>{const reduced=matchMedia('(prefers-reduced-motion:reduce)');document.addEventListener('click',event=>{const target=event.target.closest('button,a.intro-link,a.package-link,summary');if(!target||target.disabled||reduced.matches||target.classList.contains('callout')&&!matchMedia('(max-width:700px)').matches)return;target.getAnimations().filter(a=>a.id==='bubble-press').forEach(a=>a.cancel());target.animate([{scale:'1 1',borderRadius:'28px'},{scale:'0.95 1.08',borderRadius:'45%'},{scale:'1.035 0.97',borderRadius:'38%'},{scale:'1 1',borderRadius:'28px'}],{id:'bubble-press',duration:520,easing:'cubic-bezier(.22,1,.36,1)'});});})();
