@@ -79,7 +79,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
   const bitmap=document.createElement('canvas'),measure=bitmap.getContext('2d');measure.font='800 '+fontSize+'px Manrope, Arial';bitmap.width=Math.ceil(measure.measureText(word).width)+12;bitmap.height=Math.ceil(fontSize*1.05);
   const ink=bitmap.getContext('2d');ink.fillStyle='#f7f2e9';ink.fillRect(0,0,bitmap.width,bitmap.height);ink.fillStyle=word==='ZEMSKOV'?'#d74b22':'#202120';ink.font='800 '+fontSize+'px Manrope, Arial';ink.fillText(word,6,fontSize*.82);
   const texture=new THREE.CanvasTexture(bitmap);texture.colorSpace=THREE.SRGBColorSpace;const wordMesh=new THREE.Mesh(new THREE.PlaneGeometry(bitmap.width*pxX,bitmap.height*pxY),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
-  const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction};
+  const homeX=(left-6+bitmap.width/2-1536)*pxX;wordMesh.position.set(homeX-direction*(small?.65:1.65),-.45+(1024-(baseline-fontSize*.82+bitmap.height/2))*pxY,-3.3);scene.add(wordMesh);return{mesh:wordMesh,homeX,direction,bitmap,texture,word};
  }
  const metric=document.createElement('canvas').getContext('2d');metric.font='800 '+fontSize+'px Manrope, Arial';
  const words=small?[]:[makeWord('NIKITA',small?760:-10,715,-1),makeWord('ZEMSKOV',(small?2300:3070)-metric.measureText('ZEMSKOV').width,1250,1)];
@@ -147,10 +147,17 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  canvas.addEventListener('pointermove',event=>{if(progress<1)return;if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;moved+=Math.abs(dx)+Math.abs(dy);targetYaw=clamp(targetYaw+dx*.004,-.55,.55);targetPitch=clamp(targetPitch+dy*.003,-.25,.25);lastX=event.clientX;lastY=event.clientY;invalidate()}else{const hit=intersect(event);if(hit!==hovered){hovered=hit;canvas.style.cursor=hit<0?'grab':'pointer';invalidate()}}});
  canvas.addEventListener('pointerup',event=>{if(!dragging)return;dragging=false;if(moved<7){const hit=intersect(event);if(hit>=0)onSelect?.(hit)}});canvas.addEventListener('pointercancel',()=>dragging=false);canvas.addEventListener('pointerleave',()=>{hovered=-1;invalidate()});
  canvas.tabIndex=0;canvas.setAttribute('aria-label','Объёмный цветок. Поверните перетаскиванием или клавишами со стрелками.');canvas.addEventListener('keydown',event=>{if(progress<1)return;let handled=true;if(event.key==='ArrowLeft')targetYaw=clamp(targetYaw-.14,-.55,.55);else if(event.key==='ArrowRight')targetYaw=clamp(targetYaw+.14,-.55,.55);else if(event.key==='ArrowUp')targetPitch=clamp(targetPitch-.08,-.25,.25);else if(event.key==='ArrowDown')targetPitch=clamp(targetPitch+.08,-.25,.25);else if(event.key==='Home'){targetYaw=.18;targetPitch=0}else handled=false;if(handled){event.preventDefault();invalidate()}});
+ function syncSceneTheme(){
+  const dark=document.documentElement.dataset.theme==='dark',paper=dark?'#20211f':'#f7f2e9',ink=dark?'#f3eee3':'#202120',accent=dark?'#ef9a54':'#d74b22';
+  backplate.material.color.set(paper);renderer.setClearColor(paper,0);
+  for(const item of words){const ctx=item.bitmap.getContext('2d');ctx.fillStyle=paper;ctx.fillRect(0,0,item.bitmap.width,item.bitmap.height);ctx.fillStyle=item.word==='ZEMSKOV'?accent:ink;ctx.font='800 '+fontSize+'px Manrope, Arial';ctx.fillText(item.word,6,fontSize*.82);item.texture.needsUpdate=true;}
+  invalidate();
+ }
+ window.addEventListener('nikita-theme-change',syncSceneTheme);syncSceneTheme();
  const observer=new ResizeObserver(size);observer.observe(canvas.parentElement);size();await renderer.compileAsync(scene,camera);renderer.render(scene,camera);canvas.dataset.ready='true';
  const visibility=()=>{lastFrame=0,lastSpread=-1;invalidate()};document.addEventListener('visibilitychange',visibility);motion.addEventListener('change',visibility);
  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visibility()},{threshold:.02});intersection.observe(canvas);
- return{play,finish,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
+ return{play,finish,setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){window.removeEventListener('nikita-theme-change',syncSceneTheme);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
 }
 
 
