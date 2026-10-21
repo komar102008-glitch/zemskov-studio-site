@@ -71,3 +71,10 @@
 
 body.final-site .petal-panel .section-contact .contact-lead{font-size:clamp(23px,2.4vw,31px);line-height:1.5}@media(max-width:860px){body.final-site .petal-panel .section-contact .contact-lead{font-size:25px}}@media(max-width:600px){body.final-site .petal-panel .section-contact .contact-lead{font-size:24px}}
 
+.final-site .section-contact .contact-links{display:flex;flex-direction:column;align-items:flex-start;gap:17px}
+body.final-site .section-contact .contact-links .telegram-link{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:12px 22px;min-height:66px;border:1px solid #94563e;border-radius:23px;background:#a65e43;color:#fff8ed;box-shadow:inset 0 1px 0 #dfb69a66,0 4px 10px #78513d10;font-size:14px;line-height:1.5;letter-spacing:0;transition:background .25s,transform .3s}
+body.final-site .section-contact .contact-links .telegram-link:hover{background:#95543d;border-color:#94563e;color:#fff8ed}
+body.final-site .section-contact .contact-links .telegram-link:active{transform:scale(.97)}
+body.final-site .section-contact .contact-links .telegram-link small{font-size:12px;line-height:1.5;color:#fff8ed}
+@media(max-width:600px){body.final-site .section-contact .contact-links .telegram-link{padding:12px 20px;font-size:14px;min-height:64px}.final-site .section-contact .contact-links>a:not(.telegram-link){font-size:16px}.final-site .contact-letter{margin-top:24px;height:120px;transform:scale(.72)}}
+@media(prefers-reduced-motion:reduce){body.final-site .section-contact .contact-links .telegram-link{transition:none}}
