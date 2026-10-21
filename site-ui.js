@@ -66,7 +66,7 @@ function followPetalLabels(points){if(matchMedia('(max-width:700px)').matches||!
 const interactionPicker=document.querySelector('.interaction-picker');
 if(interactionPicker){const descriptions={glow:'Наведите на лепесток: он подсветится. Нажмите, чтобы открыть раздел.',points:'Наведите на точку или лепесток, чтобы увидеть название. Нажмите для открытия.',lift:'Лепесток чуть приподнимается при наведении. Нажмите для открытия.',unfold:'Нажмите на лепесток: он отогнётся, а текст появится рядом с цветком.'};interactionPicker.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{selectionRevision++;interactionMode=button.dataset.mode;body.dataset.petalMode=interactionMode;api?.setInteractionMode(interactionMode);interactionPicker.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));document.querySelector('.interaction-help').textContent=descriptions[interactionMode];}));}
 const requestedSection=location.hash.slice(1),directSections={about:0,process:2,faq:3,portfolio:4,request:5};const selectedKind={landing:'Сайт продукта или услуги',personal:'Личный сайт',update:'Обновление существующего сайта'}[new URLSearchParams(location.search).get('service')];if(selectedKind)document.querySelector('.request-form select[name=kind]').value=selectedKind;if(requestedSection==='services')location.replace('services.html');else if(Object.hasOwn(directSections,requestedSection))show(directSections[requestedSection]);else if(requestedSection==='flower')finish();
-import('./site-scene.js?v=final-1').then(async module=>{
+import('./site-scene.js?v=amber-2').then(async module=>{
  api=await module.createFlowerStage({canvas,onPhase:phaseChanged,onTypeSpread:value=>{if(matchMedia('(max-width:700px)').matches)root.style.setProperty('--word-shift',((1-value)*24).toFixed(2)+'px')},onComplete:complete,onSelect:i=>show(i),onHover:i=>tags.forEach((tag,j)=>tag.classList.toggle('is-hovered',i===j)),onLabels:followPetalLabels});
  api.setInteractionMode(interactionMode);body.classList.add('has-image','is-webgl');if(skipped||motion.matches||(location.hash&&location.hash!=='#'))finish();else play();
 }).catch(error=>{canvas.dataset.error=String(error.message);console.error('3D flower unavailable:',error);complete();const positions=[[50,16],[80,28],[79,66],[49,78],[20,65],[20,29]];positions.forEach((p,i)=>{tags[i].style.setProperty('--x',`${p[0]}%`);tags[i].style.setProperty('--y',`${p[1]}%`)})});
@@ -84,3 +84,4 @@ import('./site-scene.js?v=final-1').then(async module=>{
 
 
 window.addEventListener("pageshow",event=>{if(event.persisted)location.reload()});
+

@@ -6,8 +6,8 @@ const services=[
 ];
 
 const body=document.body,canvas=document.querySelector('.still-canvas'),visual=document.querySelector('.visual'),reading=document.querySelector('.reading'),content=document.querySelector('.reading-content'),labels=[...document.querySelectorAll('[data-service]')],lines=[...document.querySelectorAll('.leaders line')],motion=matchMedia('(prefers-reduced-motion:reduce)');let api=null,selected=-1,revision=0,timer=null,contentAnimation=null,lastOrigin=null,width=1,height=1,projection=null;const sizes=labels.map(()=>({w:120,h:44}));
-function position(points){projection=points;const placed=points.map((p,i)=>({i,x:Math.max(sizes[i].w/2+12,Math.min(width-sizes[i].w/2-12,p.x*width)),y:Math.max(38,Math.min(height-30,p.y*height+22))})).sort((a,b)=>a.x-b.x);for(let j=1;j<placed.length;j++){const left=placed[j-1],right=placed[j],gap=(sizes[left.i].w+sizes[right.i].w)/2+8;if(right.x-left.x<gap)right.x=left.x+gap;}const overflow=placed.at(-1).x+sizes[placed.at(-1).i].w/2+12-width;if(overflow>0)placed.forEach(p=>p.x-=overflow);for(const p of placed){labels[p.i].style.setProperty('--x',p.x+'px');labels[p.i].style.setProperty('--y',p.y+'px');const line=lines[p.i],point=points[p.i];line.setAttribute('x1',point.cx*width*.2+p.x*.8);line.setAttribute('y1',point.cy*height*.2+p.y*.8);line.setAttribute('x2',p.x);line.setAttribute('y2',p.y-15);}}
-const ro=new ResizeObserver(entries=>{for(const entry of entries){if(entry.target===visual){width=entry.contentRect.width;height=entry.contentRect.height}else{const index=labels.indexOf(entry.target);if(index>=0)sizes[index]={w:entry.borderBoxSize?.[0]?.inlineSize||entry.contentRect.width,h:44}}}position(projection||[{x:.24,y:.63,cx:.28,cy:.43},{x:.49,y:.78,cx:.51,cy:.5},{x:.77,y:.7,cx:.72,cy:.5}])});ro.observe(visual);labels.forEach(b=>ro.observe(b));
+// Labels use a stable layout; model picking still selects the same service.
+function position(){} 
 const features=[
  [['Структура','До 5 смысловых блоков на одной странице.'],['Адаптация','Версии для телефона и компьютера.'],['Заявки','Одна форма и ваши контакты.'],['Запуск','Публикация и передача файлов.']],
  [['Страницы','До 3 страниц о вас и вашем деле.'],['Адаптация','Единое оформление для разных экранов.'],['Связь','Форма заявки и ваши контакты.'],['Запуск','Публикация и передача файлов.']],
@@ -21,3 +21,4 @@ labels.forEach((b,i)=>{b.addEventListener('click',event=>select(i,b,event.detail
 import('./services-scene.js?v=final-1').then(module=>{api=module.createStillLife(canvas,{onPick:i=>select(i),onProjection:position});api.select(selected);if(selected<0)select(0,null)}).catch(error=>{console.error('Glass composition unavailable:',error);body.classList.add('is-fallback');document.querySelector('.fallback').hidden=false});
 })();
 window.addEventListener("pageshow",event=>{if(event.persisted)location.reload()});
+

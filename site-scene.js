@@ -94,7 +94,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const meshes=[],uniformSets=[];
  for(let i=0;i<6;i++){
   const shape=shapes[i],uniforms={uOpen:{value:0},uAngle:{value:shape.angle},uLength:{value:shape.length},uWidth:{value:shape.width},uPhase:{value:shape.phase},uTime:{value:0},uLife:{value:0},uLift:{value:0}};
-  const material=new THREE.MeshPhysicalMaterial({color:0xf2ddc5,roughness:small?.18:.135,metalness:0,transmission:.89,thickness:.22,ior:1.47,attenuationColor:0xeebc91,attenuationDistance:3.5,clearcoat:.65,clearcoatRoughness:.13,dispersion:small?0:.025,envMapIntensity:1.15,side:THREE.DoubleSide,emissive:0xb65b28,emissiveIntensity:0});inject(material,uniforms);
+  const material=new THREE.MeshPhysicalMaterial({color:0xe99a62,roughness:small?.18:.135,metalness:0,transmission:.76,thickness:.32,ior:1.47,attenuationColor:0xcb5525,attenuationDistance:1.65,clearcoat:.65,clearcoatRoughness:.13,dispersion:small?0:.025,envMapIntensity:1.15,side:THREE.DoubleSide,emissive:0xb65b28,emissiveIntensity:0});inject(material,uniforms);
   const mesh=new THREE.Mesh(makeGeometry(shape,i,small),material);mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=false;mesh.userData.index=i;
   const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:THREE.DoubleSide});inject(depth,uniforms,false);mesh.customDepthMaterial=depth;head.add(mesh);meshes.push(mesh);uniformSets.push(uniforms);
  }
@@ -177,6 +177,7 @@ export async function createFlowerStage({canvas,onComplete,onSelect,onLabels,onT
  const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visibility()},{threshold:.02});intersection.observe(canvas);
  return{setPresentation(mode,index=-1){presentation.mode=mode;presentation.index=index;interactionMode=mode==='flap'?'unfold':'lift';selected=index;invalidate();},play,finish,setScrollProgress,animateBloom,hover:hoverPetal,setInteractionMode(mode){interactionMode=mode;selected=-1;hoverPetal(-1);invalidate();},setAnimated(value){animated=value;invalidate()},select(index){selected=index;invalidate()},dispose(){window.removeEventListener('nikita-theme-change',syncSceneTheme);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',visibility);cancelAnimationFrame(request);renderer.dispose()},get progress(){return progress}};
 }
+
 
 
 
