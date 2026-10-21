@@ -12,3 +12,6 @@
 @media(max-width:1000px){.visual .petal-labels{inset:auto 6vw 9px}}
 @media(max-width:600px){.visual{height:380px}.visual .petal-labels{inset:auto 18px 8px;gap:6px}.visual .petal-labels button{font-size:12px;min-height:58px;padding:9px 6px;border-radius:17px}.reading{padding-top:14px}}
 @media(prefers-reduced-motion:reduce){.visual .petal-labels button{transition:none}}
+
+.reading-content{padding-top:18px}.reading [data-copy]{margin-top:0}
+
