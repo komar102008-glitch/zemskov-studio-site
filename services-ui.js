@@ -1,8 +1,8 @@
 (()=>{
 const services=[
-{title:'Сайт продукта',copy:'Соберу одну страницу, чтобы рассказать о вашем предложении и дать посетителю понятный способ связаться с вами.',price:'От 15 000 ₽',term:'7–10 рабочих дней',items:['Одна страница до 5 смысловых блоков.','Оформление для телефона и компьютера.','Форма заявки и ваши контакты.','Два раунда правок, публикация и передача файлов.']},
-{title:'Личный сайт',copy:'Создам сайт о вас и вашем деле: с нужными разделами, материалами и способом связаться с вами.',price:'От 20 000 ₽',term:'10–14 рабочих дней',items:['До 3 страниц о вас, вашем деле или работах.','Единое оформление и адаптация под телефон.','Форма заявки и ссылки на ваши контакты.','Два раунда правок, публикация и передача файлов.']},
-{title:'Обновить сайт',copy:'Посмотрю существующую страницу и внесу небольшие согласованные изменения: в тексты, оформление или мобильную версию.',price:'От 5 000 ₽',term:'От 3 рабочих дней',items:['Одна страница, до 3 небольших изменений.','Сначала посмотрю сайт и доступные исходники.','Проверю изменённые элементы на телефоне и компьютере.','Один раунд правок и передача обновлённых файлов.']}
+{title:'Сайт продукта',copy:'Соберу одну страницу, чтобы рассказать о вашем предложении и дать посетителю понятный способ связаться с вами.',price:'От 20 000 ₽',term:'7–10 рабочих дней',items:['Одна страница до 5 смысловых блоков.','Оформление для телефона и компьютера.','Форма заявки и ваши контакты.','Два раунда правок, публикация и передача файлов.']},
+{title:'Личный сайт',copy:'Создам сайт о вас и вашем деле: с нужными разделами, материалами и способом связаться с вами.',price:'От 30 000 ₽',term:'10–14 рабочих дней',items:['До 3 страниц о вас, вашем деле или работах.','Единое оформление и адаптация под телефон.','Форма заявки и ссылки на ваши контакты.','Два раунда правок, публикация и передача файлов.']},
+{title:'Обновить сайт',copy:'Посмотрю существующую страницу и внесу небольшие согласованные изменения: в тексты, оформление или мобильную версию.',price:'От 10 000 ₽',term:'От 3 рабочих дней',items:['Одна страница, до 3 небольших изменений.','Сначала посмотрю сайт и доступные исходники.','Проверю изменённые элементы на телефоне и компьютере.','Один раунд правок и передача обновлённых файлов.']}
 ];
 
 const body=document.body,canvas=document.querySelector('.still-canvas'),visual=document.querySelector('.visual'),reading=document.querySelector('.reading'),content=document.querySelector('.reading-content'),labels=[...document.querySelectorAll('[data-service]')],lines=[...document.querySelectorAll('.leaders line')],motion=matchMedia('(prefers-reduced-motion:reduce)');let api=null,selected=-1,revision=0,timer=null,contentAnimation=null,lastOrigin=null,width=1,height=1,projection=null;const sizes=labels.map(()=>({w:120,h:44}));
@@ -21,6 +21,7 @@ labels.forEach((b,i)=>{b.addEventListener('click',event=>select(i,b,event.detail
 import('./services-scene.js?v=edges-2').then(module=>{api=module.createStillLife(canvas,{onPick:i=>select(i),onProjection:position});api.select(selected);if(selected<0)select(0,null)}).catch(error=>{console.error('Glass composition unavailable:',error);body.classList.add('is-fallback');document.querySelector('.fallback').hidden=false});
 })();
 window.addEventListener("pageshow",event=>{if(event.persisted)location.reload()});
+
 
 
 
