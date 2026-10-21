@@ -1,0 +1,42 @@
+/* Warm, restrained terracotta; text keeps its own readable contrast. */
+:root[data-palette=soft],body.soft-palette{--paper:#f5eee3;--ink:#51473f;--muted:#7a6859;--line:#d9cbbb;--orange:#a65e43;--accent:#a65e43;--accent-dark:#8e5f47;--accent-soft:#e7d3bf}
+body.soft-palette{background:var(--paper);color:var(--ink)}
+body.soft-palette ::selection{background:#dfc2aa;color:#46392f}
+body.soft-palette .paint-name img{filter:saturate(.55) contrast(.88) brightness(1.06)}
+body.soft-palette :is(h1,h2,h3){color:var(--ink)}
+body.soft-palette :is(.panel-title,.introduction h1){color:#936449}
+body.soft-palette :is(.intro-link,.action-button,.request-submit){background:#a65e43;border-color:#94563e;color:#fff8ed;box-shadow:inset 0 1px 0 #dfb69a66,0 4px 10px #78513d10}
+body.soft-palette :is(.intro-link,.action-button,.request-submit):hover{background:#95543d;color:#fff8ed}
+body.soft-palette :is(.text-button,.petal-panel-close,.reset){color:#76604e;border-color:#d5c3b1}
+body.soft-palette .text-button:hover,body.soft-palette .reset:hover{color:#594334;background-color:#ebddcc}
+body.soft-palette .callout{color:#66503e;border-color:#cfbda9}
+body.soft-palette .callout:hover,body.soft-palette .callout.is-selected{color:#7f5036}
+body.soft-palette :is(.scene-controls,.story-head,.section-nav,.delivery-heading,header){border-color:var(--line)}
+body.soft-palette :is(.scene-caption,.scene-controls,.header-note,.section-detail,.menu>p,.introduction p,.service-page-nav,footer){color:var(--muted)}
+body.soft-palette :is(.petal-wipe,.petal-panel){background:#eee1d1}
+body.soft-palette .petal-copy p,body.soft-palette .request-intro p,body.soft-palette .reading [data-copy]{color:var(--ink)}
+body.soft-palette :is(input,select,textarea){color:#51473f;border-color:#cdb8a2;background-color:#f8f1e7}
+body.soft-palette :is(input,textarea)::placeholder{color:#81705f;opacity:1}
+body.soft-palette :is(button,a,input,select,textarea):focus-visible{outline-color:#976345}
+body.soft-palette .visual .petal-labels button{background:#f7efe4;color:#64503e;border-color:#d4c1ad;box-shadow:0 2px 6px #6745270a}
+body.soft-palette .visual .petal-labels button:hover{background:#ecddcb;border-color:#b39378;color:#514032}
+body.soft-palette .visual .petal-labels button[aria-pressed=true]{background:#a65e43;border-color:#96563d;color:#fff8ed;box-shadow:inset 0 1px 0 #dcb09266,0 3px 8px #7a4b3312}
+body.soft-palette .offer-price{background:#d4b59b;color:#503b2c;box-shadow:inset 0 1px 0 #f3dfc8,0 6px 14px -12px #72513b66}
+body.soft-palette .estimate strong{color:#503b2c}
+body.soft-palette .estimate :is(span,.price-caption){color:#5b422f}
+body.soft-palette .offer-price .cta{background:#70533f;border-color:#70533f;color:#fff7e9;box-shadow:inset 0 1px 0 #b18e7366}
+body.soft-palette .offer-price .cta:hover{background:#614734}
+body.soft-palette .reading :is(li span,.terms,.revision-note),body.soft-palette .delivery-heading>span,body.soft-palette .layers-hint{color:#7c654f}
+body.soft-palette .reading li strong{color:#5d4836}
+body.soft-palette .reading :is(li,.delivery-heading){border-color:#d8c5b0}
+body.soft-palette .revision-note{border-color:#b58a69}
+body.soft-palette .service-layers{background:radial-gradient(ellipse at 55% 66%,#dfcbb633,transparent 65%)}
+body.soft-palette .service-layers .layer-structure{background:linear-gradient(130deg,#c39879f2,#ddbaa0ef)}
+body.soft-palette .service-layers .layer-design{background:linear-gradient(130deg,#f8f0e4f5,#e9d9c7ee)}
+body.soft-palette .service-layers .layer-result{background:linear-gradient(125deg,#faf3e8f5,#eddfcfec)}
+body.soft-palette .service-layers :is(.layer-type,.layer-result-copy strong){color:#976a4d}
+body.soft-palette .service-layers .layer-result-copy i{background:#a76c4f;color:#fff8ed}
+
+
+body.soft-palette .request::before{background:#eaddcc}body.soft-palette .faq-list details{background:#f4eade;border-color:#d5c0aa}body.soft-palette .faq-list details[open]{background:#eaddcc;border-color:#b89a7e}body.soft-palette :is(.faq-list p,.request-form label,.request-form .consent,.delivery-note){color:#6c5745}body.soft-palette .contact-links a{color:#8e5f47;border-color:#b9957b}
+
