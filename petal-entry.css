@@ -1,0 +1,15 @@
+.petal-entry .petal-wipe{position:fixed;inset:var(--entry-top,105px) 0 0;z-index:21;background:#f1dfcd;pointer-events:none;clip-path:circle(0 at var(--wipe-x,70vw) var(--wipe-y,35vh));transition:clip-path 1.15s cubic-bezier(.65,0,.2,1);visibility:hidden}
+body.petal-entry.flow-reading{overflow:hidden}
+.petal-entry.flow-reading .petal-wipe{visibility:visible;clip-path:circle(145vmax at var(--wipe-x,70vw) var(--wipe-y,35vh))}
+.petal-entry .scene{transition:transform 1.4s cubic-bezier(.2,.7,.2,1),opacity .55s ease}
+.petal-entry.flow-reading .scene{transform:translateX(-15vw) scale(1.14);opacity:0;transition:transform 1.4s cubic-bezier(.2,.7,.2,1),opacity .55s .55s ease}
+.petal-entry.flow-reading :is(.paint-name,.introduction,.scene-controls,.callouts,.scene-caption,.skip){opacity:0!important;pointer-events:none;visibility:hidden}
+.petal-entry .petal-panel{inset:var(--entry-top,105px) 0 0;width:auto;height:auto;max-height:none;padding:20px max(6vw,22px) 40px;border:0;border-radius:0;box-shadow:none;background:#f1dfcd;z-index:30}
+.petal-entry .petal-panel-head{position:relative;top:auto;background:transparent;border:0;padding:0 0 14px}
+.petal-entry .panel-title{margin:24px 0 14px}
+.petal-entry .petal-panel-content{max-width:1040px;margin:auto}
+.petal-entry .petal-copy{max-width:650px}
+.petal-entry .petal-panel :is(.portfolio-section,.request-form){background:transparent}
+.petal-entry .petal-panel .request-layout{gap:40px}
+@media(max-width:700px){.petal-entry .petal-panel{padding:14px 22px 30px}.petal-entry .petal-panel .request-layout{display:block}.petal-entry .petal-panel .request-form{margin-top:28px}}
+@media(prefers-reduced-motion:reduce){.petal-entry .petal-wipe,.petal-entry.flow-reading .scene{transition:none}}

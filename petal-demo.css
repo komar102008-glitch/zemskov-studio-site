@@ -35,3 +35,27 @@
  .petal-copy{padding:32px 0}.petal-copy p{font-size:16px}
 }
 .petal-panel{overflow-x:hidden}.petal-panel .request-form,.petal-panel .request-layout>*{min-width:0}
+/* One type family and direct copy, without decorative numbering or duplicate titles. */
+.petal-demo{--portfolio-font:'Golos Text',Arial,sans-serif;font-family:var(--portfolio-font)}
+html[data-portfolio-font=onest] .petal-demo{--portfolio-font:'Onest',Arial,sans-serif}
+html[data-portfolio-font=serif] .petal-demo{--portfolio-font:'PT Serif',Georgia,serif}
+.petal-demo .petal-panel,.petal-demo button,.petal-demo input,.petal-demo textarea,.petal-demo select,.petal-demo .service-list h3{font-family:var(--portfolio-font)}
+.petal-demo .header-note,.petal-demo .eyebrow,.petal-demo .chapter-note,.petal-demo .section-index,.petal-demo .row-number{display:none}
+.petal-demo .introduction{max-width:330px}
+.petal-demo .introduction h2{font-weight:400;letter-spacing:-.035em;font-size:clamp(28px,3.1vw,43px);line-height:1.16;margin-bottom:26px}
+.petal-demo .scene-controls{justify-content:flex-end;gap:24px}
+.petal-demo .scene-controls>p{margin-right:auto}
+.petal-demo .menu-nav button{gap:0;font-size:17px}
+.petal-panel-head{justify-content:flex-end}
+.petal-panel .service-list{margin-top:0}
+.petal-panel .service-list article{padding-top:38px}
+.petal-panel .faq-layout{display:block}
+.petal-panel .request-intro>p{font-size:17px;line-height:1.75;margin-top:0}
+.petal-copy{padding-top:24px}
+.petal-copy p{font-size:19px;line-height:1.75}
+@media(max-width:700px){.petal-demo .introduction h2{font-size:31px;margin-bottom:20px}.petal-demo .scene-controls{display:flex;flex-wrap:wrap;gap:16px}.petal-demo .introduction{margin-top:24px}.petal-copy p{font-size:17px}}
+
+/* Handwriting trial: keep connected glyphs intact, readable UI stays in Golos. */
+.petal-demo .introduction h2{font-family:'Great Vibes',cursive;font-weight:400;font-size:clamp(34px,3.5vw,49px);line-height:1.22;letter-spacing:0;font-variant-ligatures:normal;font-feature-settings:'liga' 1,'calt' 1}
+@media(max-width:700px){.petal-demo .introduction h2{font-size:36px}}
+

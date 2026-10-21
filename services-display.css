@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Dela Gothic One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(dela-gothic-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Dela Gothic One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(dela-gothic-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Dela Gothic One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(dela-gothic-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}/* Dela Gothic One: an open Cyrillic display alternative to the Ragick reference. */
+.introduction h1,.reading h2{font-family:'Dela Gothic One','Golos Text',sans-serif;font-weight:400;font-synthesis:none;letter-spacing:-.045em;line-height:1.18}
+.introduction h1{font-size:clamp(26px,2.7vw,38px);max-width:400px}
+.reading h2{font-size:clamp(28px,2.7vw,39px);margin-bottom:20px}
+header .brand{font-family:'Dela Gothic One','Golos Text',sans-serif;font-weight:400;letter-spacing:-.045em;font-size:12px}
+.estimate strong{font-family:'Dela Gothic One','Golos Text',sans-serif;font-weight:400;font-size:clamp(26px,2.6vw,36px);letter-spacing:-.055em;line-height:1.2}
+.delivery-heading h3{font-family:'Dela Gothic One','Golos Text',sans-serif;font-weight:400;font-size:13px;letter-spacing:-.035em}
+.mini-hero strong{font-family:'Dela Gothic One','Golos Text',sans-serif;font-weight:400;font-size:9px;line-height:1.35;letter-spacing:-.03em}
+@media(max-width:1000px){.introduction h1{font-size:32px}.reading h2{font-size:35px}.estimate strong{font-size:33px}}
+@media(max-width:600px){header .brand{font-size:11px}.introduction h1{font-size:27px;max-width:330px}.reading h2{font-size:29px;line-height:1.2;margin-bottom:18px}.estimate strong{font-size:25px}.delivery-heading h3{font-size:11px}.mini-hero strong{font-size:8px;line-height:1.4}}
+@media(max-width:360px){header>span{display:none}.offer-price{flex-direction:column;align-items:stretch;gap:17px}.offer-price .cta{align-self:stretch}.introduction h1{font-size:24px}.reading h2{font-size:27px}.delivery-heading{align-items:start}.delivery-heading>span{max-width:100px}}
+.introduction h1,.reading h2{letter-spacing:-.025em;word-spacing:.12em}
+header .brand{letter-spacing:-.015em;word-spacing:.12em}
+.estimate strong{letter-spacing:-.025em;word-spacing:.13em}

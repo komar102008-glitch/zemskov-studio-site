@@ -1,0 +1,2 @@
+.service-page-nav{display:flex;align-items:center;gap:24px;margin-left:auto;font-size:11px;color:#8b6e54}.service-page-nav a{border-bottom:1px solid transparent}.service-page-nav a:hover{border-color:#c78d64}.back{margin-left:10px}
+@media(max-width:700px){.service-page-nav{gap:14px;font-size:10px}.back{margin-left:auto}header{flex-wrap:wrap;row-gap:8px}.service-page-nav{order:4;width:100%;justify-content:flex-end}header>span{display:none}}
